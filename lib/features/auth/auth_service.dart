@@ -32,6 +32,7 @@ class AuthService extends _$AuthService {
       final UserCredential userCredential = await _auth.signInWithCredential(credential);
       final User? firebaseUser = userCredential.user;
 
+
       if (firebaseUser != null) {
         final userDoc = await _firestore.collection('users').doc(firebaseUser.uid).get();
 
