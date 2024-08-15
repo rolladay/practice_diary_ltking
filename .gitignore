@@ -1,0 +1,19 @@
+# Flutter related files
+**/build/
+**/.dart_tool/
+**/.idea/
+**/.packages
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/flutter_export_environment.sh
+**/pubspec.lock
+
+# IDEs
+**/android/.gradle
+**/android/app/key.properties
+**/ios/Flutter/.last_build_id
+**/ios/Pods
+**/ios/.symlinks
+**/ios/Flutter/ephemeral
+**/ios/Flutter/Flutter.framework
+**/macos/Flutter/ephemeral

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "576261762950",
+    "project_id": "kingoflotto-ee288",
+    "storage_bucket": "kingoflotto-ee288.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:576261762950:android:82cb1b0ba916f9de7e4607",
+        "android_client_info": {
+          "package_name": "com.lotto.king"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBG-cNs02_qwA07sZgEKfAwlFAgSEIo6A0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
