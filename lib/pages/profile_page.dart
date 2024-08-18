@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:kingoflotto/components/my_appbar.dart';
 import 'package:kingoflotto/components/my_container.dart';
 import 'package:kingoflotto/components/my_sizedbox.dart';
 import 'package:kingoflotto/constants/fonts_constants.dart';
 import 'package:kingoflotto/features/admob/ad_service.dart';
+import 'package:kingoflotto/features/isar_db/isar_service.dart';
 import 'package:kingoflotto/pages/signin_page.dart';
 import '../constants/color_constants.dart';
 import '../features/auth/auth_service.dart';
@@ -20,6 +20,8 @@ class ProfilePage extends ConsumerStatefulWidget {
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
   final AdManager _adManager = AdManager();
+
+  final isar = IsarService();
 
   @override
   void initState() {
@@ -54,6 +56,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       print('Fetched!');
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +119,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           child: Column(
             children: [
               const MySizedBox(
-                height: 16,
+                height: 8,
               ),
               (_adManager.isBannerAdReady)
                   ? SizedBox(
@@ -137,7 +141,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                             )),
                       ),
                     ),
-              const MySizedBox(height: 16),
+              const MySizedBox(height: 8),
               MyContainer(
                   upperChild: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -282,6 +286,23 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     ],
                   ),
                   bottomHeight: 320),
+
+              FutureBuilder(
+                future: isar.getLatestLottoResult(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator(); // 데이터를 로딩 중일 때 보여줄 위젯
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}'); // 에러 발생 시 보여줄 위젯
+                  } else if (snapshot.hasData) {
+                    return Text(snapshot.data!.drawDate.toString()); // 데이터가 존재할 때 보여줄 위젯
+                  } else {
+                    return Text('No data'); // 데이터가 없을 때 보여줄 위젯
+                  }
+                },
+              ),
+
+
               ElevatedButton(
                 child: const Text('로그아웃또'),
                 onPressed: () async {

@@ -7,14 +7,12 @@ part 'user_game.g.dart';
 class UserGame with _$UserGame {
   factory UserGame({
     required int roundNo,
-    required int drwNo1,
-    required int drwNo2,
-    required int drwNo3,
-    required int drwNo4,
-    required int drwNo5,
-    required int drwNo6,
-    required List<int> selectedDrwNos,
+    required Set<int> selectedDrwNos,
     required String playerUid,
+    String? result,
+    Set<int>? winningNos,
+    int? matchingCount,
+    int? bonusNo,
   }) = _Game;
 
   factory UserGame.fromJson(Map<String, dynamic> json) => _$UserGameFromJson(json);

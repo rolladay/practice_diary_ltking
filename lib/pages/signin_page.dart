@@ -51,12 +51,13 @@ class _SignInPageState extends ConsumerState<SignInPage> {
       };
       // Firestore 문서 업데이트
       await firestore.collection('users').doc(user.uid).update(userData);
-      userModel.fetchUser(user.uid);
+      // 여기서 부터는 User가 상태가바뀌어야함
+      await userModel.fetchUser(user.uid);
       //UserModel 상태관리 클래스의 처음 접근, 초기값은 null
       print(ref.read(userModelNotifierProvider));
       print('123');
 
-      // 2초 후 HomePage로 이동
+      // 1초 후 HomePage로 이동
       Timer(const Duration(seconds: 1), navigateToHome);
     } // 로그인된 사용자가 없으면 아무 동작도 하지 않음
   }

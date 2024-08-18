@@ -81,10 +81,10 @@ class _DrawPageState extends ConsumerState<DrawPage> {
                       child: SizedBox(
                         width: double.infinity,
                         child: Column(
-        
+
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('회차: ${lottoResult.drawNumber+1}'),
+                            Text('회차: ${lottoResult.roundNumber+1}'),
                             Text('추첨일: ${lottoResult.drawDate}'),
                             // Text('당첨번호: ${lottoResult.winningNumbers.join(', ')}'),
                             // Text('보너스 번호: ${lottoResult.bonusNumber}'),
@@ -97,19 +97,8 @@ class _DrawPageState extends ConsumerState<DrawPage> {
                             MyBtnContainer(color: Colors.white24),
                             MySizedBox(height: 8),
                             MyBtnContainer(color: Colors.white24),
-                            MySizedBox(height: 8),
-                            MyBtnContainer(color: Colors.white24),
-                            MySizedBox(height: 8),
-                            MyBtnContainer(color: Colors.white24),
-                            MySizedBox(height: 8),
-                            MyBtnContainer(color: Colors.white24),
-                            MySizedBox(height: 8),
-                            MyBtnContainer(color: Colors.white24),
-                            MySizedBox(height: 8),
-                            MyBtnContainer(color: Colors.white24),
-                            MySizedBox(height: 8),
-                            MyBtnContainer(color: Colors.white24),
-        
+
+
                           ],
                         ),
                       ),
@@ -126,7 +115,7 @@ class _DrawPageState extends ConsumerState<DrawPage> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return const DirectNumberSelector();
+                      return const NumberSelectionScreen(playerUid: '1', roundNo: 1,);
                     },
                   );
                 },

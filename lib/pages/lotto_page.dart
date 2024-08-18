@@ -95,7 +95,7 @@ class _LottoPageState extends ConsumerState<LottoPage> {
       body: Column(
         children: [
           const MySizedBox(
-            height: 16,
+            height: 8,
           ),
           (_adManager.isBannerAdReady)
               ? SizedBox(
@@ -117,191 +117,228 @@ class _LottoPageState extends ConsumerState<LottoPage> {
                         )),
                   ),
                 ),
-          const MySizedBox(height: 16),
+          const MySizedBox(height: 8),
           // 여기가 웹크롤링...
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                Center(
-                  child: FutureBuilder<LottoResult>(
-                    future: _futureLottoResult, // 저장된 Future 사용
-                    builder: (context, snapshot) {
-                      print('aaaaaaaaaaaaaaaaaaaaaaa');
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        print('bbbbbbbbbbbbbbbbbbbbbbbbbb');
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: MyContainer(
-                            upperChild: const Row(
-                              children: [
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Text('Loading..'),
-                                Spacer(),
-                              ],
-                            ),
-                            bottomChild: Center(
-                                child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: primaryYellow,
-                            )),
-                            bottomHeight: 200,
-                          ),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else if (snapshot.hasData) {
-                        print('ffffffffffffffffffff');
-                        final lottoResult = snapshot.data!;
-                        print(snapshot);
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: MyContainer(
-                                  upperChild: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          '${lottoResult.drawNumber}회',
-                                          style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        const Spacer(),
-                                        Text(
-                                          lottoResult.drawDate.toString(),
-                                          style: const TextStyle(fontSize: 12),
-                                        ),
-                                      ],
-                                    ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Center(
+                    child: FutureBuilder<LottoResult>(
+                      future: _futureLottoResult, // 저장된 Future 사용
+                      builder: (context, snapshot) {
+                        print('aaaaaaaaaaaaaaaaaaaaaaa');
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          print('bbbbbbbbbbbbbbbbbbbbbbbbbb');
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: MyContainer(
+                              upperChild: const Row(
+                                children: [
+                                  SizedBox(
+                                    width: 8,
                                   ),
-                                  bottomChild: Column(
-                                    children: [
-                                      const MySizedBox(height: 8),
-                                      // 동그라미 6개 영역
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: lottoResult.winningNumbers
-                                              .map((number) {
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.all(4.0),
-                                              // 각 숫자 사이의 간격
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  border: Border.all(
-                                                      color: Colors.black,
-                                                      width: 1.5), // 테두리 색상과 두께
-                                                ),
-                                                child: CircleAvatar(
-                                                  radius: 18, // 원의 크기
-                                                  backgroundColor:
-                                                      primaryYellow,
-
-                                                  // 원의 배경색
-                                                  child: SignutureFont(
-                                                    title: number.toString(),
-                                                    textStyle: ballTextStyle,
-                                                    strokeTextStyle:
-                                                        ballTextStyleWithStroke,
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          }).toList(),
-                                        ),
-                                      ),
-                                      const MySizedBox(height: 2),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                  Text('Loading..'),
+                                  Spacer(),
+                                ],
+                              ),
+                              bottomChild: Center(
+                                  child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: primaryYellow,
+                              )),
+                              bottomHeight: 200,
+                            ),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else if (snapshot.hasData) {
+                          print('ffffffffffffffffffff');
+                          final lottoResult = snapshot.data!;
+                          print(snapshot);
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              //당첨결과 카드
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16.0),
+                                child: MyContainer(
+                                    upperChild: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      child: Row(
                                         children: [
-                                          const Text(
-                                            'Bonus Number : ',
-                                            style: TextStyle(
-                                                color: Colors.black54,
-                                                fontSize: 12),
-                                          ),
                                           Text(
-                                            lottoResult.bonusNumber.toString(),
+                                            '${lottoResult.roundNumber}회',
                                             style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14),
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            lottoResult.drawDate.toString(),
+                                            style: const TextStyle(fontSize: 12),
                                           ),
                                         ],
                                       ),
-                                      const MySizedBox(height: 8),
-                                      const Text(
-                                        '1등 당첨금',
-                                        style: TextStyle(color: Colors.black54),
-                                      ),
-                                      SignutureFont2(
-                                          title: '${lottoResult.prizeAmounts}원',
-                                          textStyle: bigTextStyle,
-                                          strokeTextStyle:
-                                              bigTextStyleWithStroke),
-
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Container(
-                                          height: 1,
-                                          width: double.infinity,
-                                          color: Colors.black45,
+                                    ),
+                                    bottomChild: Column(
+                                      children: [
+                                        const MySizedBox(height: 8),
+                                        // 동그라미 6개 영역
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: lottoResult.winningNumbers
+                                                .map((number) {
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.all(4.0),
+                                                // 각 숫자 사이의 간격
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                        color: Colors.black,
+                                                        width: 1.5), // 테두리 색상과 두께
+                                                  ),
+                                                  child: CircleAvatar(
+                                                    radius: 18, // 원의 크기
+                                                    backgroundColor:
+                                                        primaryYellow,
+            
+                                                    // 원의 배경색
+                                                    child: SignutureFont(
+                                                      title: number.toString(),
+                                                      textStyle: ballTextStyle,
+                                                      strokeTextStyle:
+                                                          ballTextStyleWithStroke,
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            }).toList(),
+                                          ),
                                         ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                        child: Row(
+                                        const MySizedBox(height: 2),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
-                                            Text('당첨자수', style: TextStyle(fontSize: 12),),
-                                            Spacer(),
-                                            Text('당첨판매점 보기', style: TextStyle(fontWeight: FontWeight.bold, color: specialBlue),),
+                                            const Text(
+                                              'Bonus Number : ',
+                                              style: TextStyle(
+                                                  color: Colors.black54,
+                                                  fontSize: 12),
+                                            ),
+                                            Text(
+                                              lottoResult.bonusNumber.toString(),
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14),
+                                            ),
                                           ],
                                         ),
-                                      )
-                                    ],
+                                        const MySizedBox(height: 8),
+                                        const Text(
+                                          '1등 당첨금',
+                                          style: TextStyle(color: Colors.black54),
+                                        ),
+                                        SignutureFont2(
+                                            title: '${lottoResult.prizeAmounts}원',
+                                            textStyle: bigTextStyle,
+                                            strokeTextStyle:
+                                                bigTextStyleWithStroke),
+            
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            height: 1,
+                                            width: double.infinity,
+                                            color: Colors.black45,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8.0),
+                                          child: Row(
+                                            children: [
+                                              const Text(
+                                                '당첨자수',
+                                                style: TextStyle(fontSize: 12),
+                                              ),
+                                              const Spacer(),
+                                              Text(
+                                                '당첨판매점 보기',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: specialBlue),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+            
+                                      ],
+                                    ),
+                                    bottomHeight: 200),
+                              ),
+                              const MySizedBox(height: 16),
+            
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 240,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(),
+                                    borderRadius: BorderRadius.circular(8),
                                   ),
-                                  bottomHeight: 200),
-                            ),
-                            const MySizedBox(height: 16),
-                            // 나의 성적보기
+                                  // 여기 if문으로 유저의 해당회차 결과가 있으면 보여주는 코드 삽입
+                                  child: Center(child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center, // 세로 축 중앙 정렬
+                                    crossAxisAlignment: CrossAxisAlignment.center, // 가로 축 중앙 정렬
+                                    children: [
+                                      Image.asset('assets/images/lotto_missing.png', width: 32,),
+                                      const MySizedBox(height: 8),
+                                      const Text('이 라운드에 도전하지 않았습니다.'),
+                                    ],
+                                  ),),
+                                ),
+                              ),
 
+                              //여기가 내 결과 밑에 뭔가들어갈게 있다면 들어가고 AD외 전체 스크롤됨
+                              // Text('1', style: TextStyle(fontSize: 40),),
 
-
-                            // 웹크롤링 해서 가져온 데이터 > 주석처리 참조용
-                            // Text('Draw Number: ${lottoResult.drawNumber}'),
-                            // Text(
-                            //     'Winning Numbers: ${lottoResult.winningNumbers.join(', ')}'),
-                            // Text('Bonus Number: ${lottoResult.bonusNumber}'),
-                            // Text('Prize Amounts: ${lottoResult.prizeAmounts}'),
-                            // Text('drawDate: ${lottoResult.drawDate}'),
-                          ],
-                        );
-                      } else {
-                        return Text(
-                          'No data available',
-                          style: TextStyle(color: Colors.black12),
-                        );
-                      }
-                    },
+                              // 웹크롤링 해서 가져온 데이터 > 주석처리 참조용
+                              // Text('Draw Number: ${lottoResult.drawNumber}'),
+                              // Text(
+                              //     'Winning Numbers: ${lottoResult.winningNumbers.join(', ')}'),
+                              // Text('Bonus Number: ${lottoResult.bonusNumber}'),
+                              // Text('Prize Amounts: ${lottoResult.prizeAmounts}'),
+                              // Text('drawDate: ${lottoResult.drawDate}'),
+                            ],
+                          );
+                        } else {
+                          return const Text(
+                            'No data available',
+                            style: TextStyle(color: Colors.black12),
+                          );
+                        }
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           // 여기가 웹크롤링...
-        ],
+          // Text('1'),
+        ],//여기가 body전체 마지막
       ),
     );
   }

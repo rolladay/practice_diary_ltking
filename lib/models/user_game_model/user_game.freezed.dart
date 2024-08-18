@@ -21,14 +21,12 @@ UserGame _$UserGameFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$UserGame {
   int get roundNo => throw _privateConstructorUsedError;
-  int get drwNo1 => throw _privateConstructorUsedError;
-  int get drwNo2 => throw _privateConstructorUsedError;
-  int get drwNo3 => throw _privateConstructorUsedError;
-  int get drwNo4 => throw _privateConstructorUsedError;
-  int get drwNo5 => throw _privateConstructorUsedError;
-  int get drwNo6 => throw _privateConstructorUsedError;
-  List<int> get selectedDrwNos => throw _privateConstructorUsedError;
+  Set<int> get selectedDrwNos => throw _privateConstructorUsedError;
   String get playerUid => throw _privateConstructorUsedError;
+  String? get result => throw _privateConstructorUsedError;
+  Set<int>? get winningNos => throw _privateConstructorUsedError;
+  int? get matchingCount => throw _privateConstructorUsedError;
+  int? get bonusNo => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -43,14 +41,12 @@ abstract class $UserGameCopyWith<$Res> {
   @useResult
   $Res call(
       {int roundNo,
-      int drwNo1,
-      int drwNo2,
-      int drwNo3,
-      int drwNo4,
-      int drwNo5,
-      int drwNo6,
-      List<int> selectedDrwNos,
-      String playerUid});
+      Set<int> selectedDrwNos,
+      String playerUid,
+      String? result,
+      Set<int>? winningNos,
+      int? matchingCount,
+      int? bonusNo});
 }
 
 /// @nodoc
@@ -67,52 +63,42 @@ class _$UserGameCopyWithImpl<$Res, $Val extends UserGame>
   @override
   $Res call({
     Object? roundNo = null,
-    Object? drwNo1 = null,
-    Object? drwNo2 = null,
-    Object? drwNo3 = null,
-    Object? drwNo4 = null,
-    Object? drwNo5 = null,
-    Object? drwNo6 = null,
     Object? selectedDrwNos = null,
     Object? playerUid = null,
+    Object? result = freezed,
+    Object? winningNos = freezed,
+    Object? matchingCount = freezed,
+    Object? bonusNo = freezed,
   }) {
     return _then(_value.copyWith(
       roundNo: null == roundNo
           ? _value.roundNo
           : roundNo // ignore: cast_nullable_to_non_nullable
               as int,
-      drwNo1: null == drwNo1
-          ? _value.drwNo1
-          : drwNo1 // ignore: cast_nullable_to_non_nullable
-              as int,
-      drwNo2: null == drwNo2
-          ? _value.drwNo2
-          : drwNo2 // ignore: cast_nullable_to_non_nullable
-              as int,
-      drwNo3: null == drwNo3
-          ? _value.drwNo3
-          : drwNo3 // ignore: cast_nullable_to_non_nullable
-              as int,
-      drwNo4: null == drwNo4
-          ? _value.drwNo4
-          : drwNo4 // ignore: cast_nullable_to_non_nullable
-              as int,
-      drwNo5: null == drwNo5
-          ? _value.drwNo5
-          : drwNo5 // ignore: cast_nullable_to_non_nullable
-              as int,
-      drwNo6: null == drwNo6
-          ? _value.drwNo6
-          : drwNo6 // ignore: cast_nullable_to_non_nullable
-              as int,
       selectedDrwNos: null == selectedDrwNos
           ? _value.selectedDrwNos
           : selectedDrwNos // ignore: cast_nullable_to_non_nullable
-              as List<int>,
+              as Set<int>,
       playerUid: null == playerUid
           ? _value.playerUid
           : playerUid // ignore: cast_nullable_to_non_nullable
               as String,
+      result: freezed == result
+          ? _value.result
+          : result // ignore: cast_nullable_to_non_nullable
+              as String?,
+      winningNos: freezed == winningNos
+          ? _value.winningNos
+          : winningNos // ignore: cast_nullable_to_non_nullable
+              as Set<int>?,
+      matchingCount: freezed == matchingCount
+          ? _value.matchingCount
+          : matchingCount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      bonusNo: freezed == bonusNo
+          ? _value.bonusNo
+          : bonusNo // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 }
@@ -126,14 +112,12 @@ abstract class _$$GameImplCopyWith<$Res> implements $UserGameCopyWith<$Res> {
   @useResult
   $Res call(
       {int roundNo,
-      int drwNo1,
-      int drwNo2,
-      int drwNo3,
-      int drwNo4,
-      int drwNo5,
-      int drwNo6,
-      List<int> selectedDrwNos,
-      String playerUid});
+      Set<int> selectedDrwNos,
+      String playerUid,
+      String? result,
+      Set<int>? winningNos,
+      int? matchingCount,
+      int? bonusNo});
 }
 
 /// @nodoc
@@ -147,52 +131,42 @@ class __$$GameImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? roundNo = null,
-    Object? drwNo1 = null,
-    Object? drwNo2 = null,
-    Object? drwNo3 = null,
-    Object? drwNo4 = null,
-    Object? drwNo5 = null,
-    Object? drwNo6 = null,
     Object? selectedDrwNos = null,
     Object? playerUid = null,
+    Object? result = freezed,
+    Object? winningNos = freezed,
+    Object? matchingCount = freezed,
+    Object? bonusNo = freezed,
   }) {
     return _then(_$GameImpl(
       roundNo: null == roundNo
           ? _value.roundNo
           : roundNo // ignore: cast_nullable_to_non_nullable
               as int,
-      drwNo1: null == drwNo1
-          ? _value.drwNo1
-          : drwNo1 // ignore: cast_nullable_to_non_nullable
-              as int,
-      drwNo2: null == drwNo2
-          ? _value.drwNo2
-          : drwNo2 // ignore: cast_nullable_to_non_nullable
-              as int,
-      drwNo3: null == drwNo3
-          ? _value.drwNo3
-          : drwNo3 // ignore: cast_nullable_to_non_nullable
-              as int,
-      drwNo4: null == drwNo4
-          ? _value.drwNo4
-          : drwNo4 // ignore: cast_nullable_to_non_nullable
-              as int,
-      drwNo5: null == drwNo5
-          ? _value.drwNo5
-          : drwNo5 // ignore: cast_nullable_to_non_nullable
-              as int,
-      drwNo6: null == drwNo6
-          ? _value.drwNo6
-          : drwNo6 // ignore: cast_nullable_to_non_nullable
-              as int,
       selectedDrwNos: null == selectedDrwNos
           ? _value._selectedDrwNos
           : selectedDrwNos // ignore: cast_nullable_to_non_nullable
-              as List<int>,
+              as Set<int>,
       playerUid: null == playerUid
           ? _value.playerUid
           : playerUid // ignore: cast_nullable_to_non_nullable
               as String,
+      result: freezed == result
+          ? _value.result
+          : result // ignore: cast_nullable_to_non_nullable
+              as String?,
+      winningNos: freezed == winningNos
+          ? _value._winningNos
+          : winningNos // ignore: cast_nullable_to_non_nullable
+              as Set<int>?,
+      matchingCount: freezed == matchingCount
+          ? _value.matchingCount
+          : matchingCount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      bonusNo: freezed == bonusNo
+          ? _value.bonusNo
+          : bonusNo // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -202,47 +176,50 @@ class __$$GameImplCopyWithImpl<$Res>
 class _$GameImpl implements _Game {
   _$GameImpl(
       {required this.roundNo,
-      required this.drwNo1,
-      required this.drwNo2,
-      required this.drwNo3,
-      required this.drwNo4,
-      required this.drwNo5,
-      required this.drwNo6,
-      required final List<int> selectedDrwNos,
-      required this.playerUid})
-      : _selectedDrwNos = selectedDrwNos;
+      required final Set<int> selectedDrwNos,
+      required this.playerUid,
+      this.result,
+      final Set<int>? winningNos,
+      this.matchingCount,
+      this.bonusNo})
+      : _selectedDrwNos = selectedDrwNos,
+        _winningNos = winningNos;
 
   factory _$GameImpl.fromJson(Map<String, dynamic> json) =>
       _$$GameImplFromJson(json);
 
   @override
   final int roundNo;
+  final Set<int> _selectedDrwNos;
   @override
-  final int drwNo1;
-  @override
-  final int drwNo2;
-  @override
-  final int drwNo3;
-  @override
-  final int drwNo4;
-  @override
-  final int drwNo5;
-  @override
-  final int drwNo6;
-  final List<int> _selectedDrwNos;
-  @override
-  List<int> get selectedDrwNos {
-    if (_selectedDrwNos is EqualUnmodifiableListView) return _selectedDrwNos;
+  Set<int> get selectedDrwNos {
+    if (_selectedDrwNos is EqualUnmodifiableSetView) return _selectedDrwNos;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_selectedDrwNos);
+    return EqualUnmodifiableSetView(_selectedDrwNos);
   }
 
   @override
   final String playerUid;
+  @override
+  final String? result;
+  final Set<int>? _winningNos;
+  @override
+  Set<int>? get winningNos {
+    final value = _winningNos;
+    if (value == null) return null;
+    if (_winningNos is EqualUnmodifiableSetView) return _winningNos;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(value);
+  }
+
+  @override
+  final int? matchingCount;
+  @override
+  final int? bonusNo;
 
   @override
   String toString() {
-    return 'UserGame(roundNo: $roundNo, drwNo1: $drwNo1, drwNo2: $drwNo2, drwNo3: $drwNo3, drwNo4: $drwNo4, drwNo5: $drwNo5, drwNo6: $drwNo6, selectedDrwNos: $selectedDrwNos, playerUid: $playerUid)';
+    return 'UserGame(roundNo: $roundNo, selectedDrwNos: $selectedDrwNos, playerUid: $playerUid, result: $result, winningNos: $winningNos, matchingCount: $matchingCount, bonusNo: $bonusNo)';
   }
 
   @override
@@ -251,16 +228,16 @@ class _$GameImpl implements _Game {
         (other.runtimeType == runtimeType &&
             other is _$GameImpl &&
             (identical(other.roundNo, roundNo) || other.roundNo == roundNo) &&
-            (identical(other.drwNo1, drwNo1) || other.drwNo1 == drwNo1) &&
-            (identical(other.drwNo2, drwNo2) || other.drwNo2 == drwNo2) &&
-            (identical(other.drwNo3, drwNo3) || other.drwNo3 == drwNo3) &&
-            (identical(other.drwNo4, drwNo4) || other.drwNo4 == drwNo4) &&
-            (identical(other.drwNo5, drwNo5) || other.drwNo5 == drwNo5) &&
-            (identical(other.drwNo6, drwNo6) || other.drwNo6 == drwNo6) &&
             const DeepCollectionEquality()
                 .equals(other._selectedDrwNos, _selectedDrwNos) &&
             (identical(other.playerUid, playerUid) ||
-                other.playerUid == playerUid));
+                other.playerUid == playerUid) &&
+            (identical(other.result, result) || other.result == result) &&
+            const DeepCollectionEquality()
+                .equals(other._winningNos, _winningNos) &&
+            (identical(other.matchingCount, matchingCount) ||
+                other.matchingCount == matchingCount) &&
+            (identical(other.bonusNo, bonusNo) || other.bonusNo == bonusNo));
   }
 
   @JsonKey(ignore: true)
@@ -268,14 +245,12 @@ class _$GameImpl implements _Game {
   int get hashCode => Object.hash(
       runtimeType,
       roundNo,
-      drwNo1,
-      drwNo2,
-      drwNo3,
-      drwNo4,
-      drwNo5,
-      drwNo6,
       const DeepCollectionEquality().hash(_selectedDrwNos),
-      playerUid);
+      playerUid,
+      result,
+      const DeepCollectionEquality().hash(_winningNos),
+      matchingCount,
+      bonusNo);
 
   @JsonKey(ignore: true)
   @override
@@ -294,35 +269,29 @@ class _$GameImpl implements _Game {
 abstract class _Game implements UserGame {
   factory _Game(
       {required final int roundNo,
-      required final int drwNo1,
-      required final int drwNo2,
-      required final int drwNo3,
-      required final int drwNo4,
-      required final int drwNo5,
-      required final int drwNo6,
-      required final List<int> selectedDrwNos,
-      required final String playerUid}) = _$GameImpl;
+      required final Set<int> selectedDrwNos,
+      required final String playerUid,
+      final String? result,
+      final Set<int>? winningNos,
+      final int? matchingCount,
+      final int? bonusNo}) = _$GameImpl;
 
   factory _Game.fromJson(Map<String, dynamic> json) = _$GameImpl.fromJson;
 
   @override
   int get roundNo;
   @override
-  int get drwNo1;
-  @override
-  int get drwNo2;
-  @override
-  int get drwNo3;
-  @override
-  int get drwNo4;
-  @override
-  int get drwNo5;
-  @override
-  int get drwNo6;
-  @override
-  List<int> get selectedDrwNos;
+  Set<int> get selectedDrwNos;
   @override
   String get playerUid;
+  @override
+  String? get result;
+  @override
+  Set<int>? get winningNos;
+  @override
+  int? get matchingCount;
+  @override
+  int? get bonusNo;
   @override
   @JsonKey(ignore: true)
   _$$GameImplCopyWith<_$GameImpl> get copyWith =>

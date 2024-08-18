@@ -4,8 +4,9 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kingoflotto/constants/color_constants.dart';
-import 'package:path_provider/path_provider.dart';
-import 'pages/signin_page.dart';
+import 'package:kingoflotto/features/isar_db/isar_service.dart';
+import 'package:kingoflotto/pages/signin_page.dart';
+
 
 
 
@@ -21,6 +22,7 @@ void main() async {
     await Future.wait([
       Firebase.initializeApp(),
       MobileAds.instance.initialize(),
+      IsarService().initialize(),
     ]);
 
     runApp(const ProviderScope(child: MyApp()));

@@ -27,7 +27,10 @@ class UserModelNotifier extends _$UserModelNotifier {
     if (doc.exists) {
       final user = UserModel.fromJson(doc.data()!);
       print('Fetched User: ${user.toString()}');
+      print('위에는 페치유저 결과값');
       state = user; // 상태 업데이트
+      print('아래는 페치유저 결과값2');
+      print(user);
     }
   }
 }
