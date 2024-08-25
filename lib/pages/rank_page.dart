@@ -11,12 +11,13 @@ class RankPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: backGroundColor,
       appBar: AppBar(
-
         backgroundColor: primaryOrange,
         centerTitle: true,
         title: Column(
           children: [
-            SizedBox(height: 8,),
+            SizedBox(
+              height: 8,
+            ),
             Stack(
               children: [
                 // Stroke Text
@@ -50,12 +51,20 @@ class RankPage extends StatelessWidget {
           ),
         ),
       ),
-      body: const Column(
+      body: Column(
         children: [
           Center(
             child: Text('컬럼'),
           ),
-          Text('1'),
+          Container(
+            width: 200,
+            child: Center(
+              child: Text(
+                  '여기에는 firebase UserCollection에 있는 유저들을 상금순으로 보여준다..'),
+            ),
+          ),
+          Text(
+              '리스트뷰빌더로 보여주는데 파이어베이스의 Pagination을 이용해서 보여준다.'),
         ],
       ),
     );

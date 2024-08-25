@@ -5,12 +5,11 @@ import 'package:kingoflotto/components/my_container.dart';
 import 'package:kingoflotto/constants/color_constants.dart';
 import 'package:kingoflotto/features/admob/ad_service.dart';
 import 'package:kingoflotto/models/lotto_result_model/lotto_result.dart';
-
 import '../components/my_sizedbox.dart';
 import '../components/signiture_font.dart';
 import '../components/signiture_font2.dart';
 import '../constants/fonts_constants.dart';
-import '../features/web_crawl/crawl_lotto_result.dart';
+import '../features/lotto_service/crawl_lotto_result.dart';
 
 class LottoPage extends ConsumerStatefulWidget {
   const LottoPage({super.key});
@@ -35,10 +34,9 @@ class _LottoPageState extends ConsumerState<LottoPage> {
         print('BannerAd failed to load: $error');
       },
     );
-    print('44444444444444444');
-    // fetchLottoResult()를 initState에서 호출하여 Future를 저장
+    // fetchLottoResult()를 initState에서 호출하여 LottoRsult Future를 저장
+    // nextDrawDate 지났으면 http요청
     _futureLottoResult = getCachedOrFetchLottoResult();
-    print('555555555555555555');
   }
 
   @override
@@ -92,6 +90,8 @@ class _LottoPageState extends ConsumerState<LottoPage> {
           ),
         ),
       ),
+
+      // Starting point of Body!!!
       body: Column(
         children: [
           const MySizedBox(
@@ -127,11 +127,13 @@ class _LottoPageState extends ConsumerState<LottoPage> {
                     child: FutureBuilder<LottoResult>(
                       future: _futureLottoResult, // 저장된 Future 사용
                       builder: (context, snapshot) {
-                        print('aaaaaaaaaaaaaaaaaaaaaaa');
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          print('bbbbbbbbbbbbbbbbbbbbbbbbbb');
+                        print('퓨쳐빌더 수행시작 : Cached or Fetch LottoResult!');
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          // Future 로딩중일 때 들어갈 위젯
                           return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
                             child: MyContainer(
                               upperChild: const Row(
                                 children: [
@@ -151,18 +153,23 @@ class _LottoPageState extends ConsumerState<LottoPage> {
                             ),
                           );
                         } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
+                          return Center(
+                            child: Text('Error: ${snapshot.error}'),
+                          );
                         } else if (snapshot.hasData) {
-                          print('ffffffffffffffffffff');
+                          print('퓨처완료 후 실행 영역');
+
+                          //아래 있는 LottoResult는 Future<LottoResult>인데 Isar 아니면 Fetch해온놈
                           final lottoResult = snapshot.data!;
-                          print(snapshot);
+                          print('스냅샷은 : $snapshot');
+                          print('snapshot.datad는 : $lottoResult');
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               //당첨결과 카드
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 16.0),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0),
                                 child: MyContainer(
                                     upperChild: Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -177,8 +184,9 @@ class _LottoPageState extends ConsumerState<LottoPage> {
                                           ),
                                           const Spacer(),
                                           Text(
-                                            lottoResult.drawDate.toString(),
-                                            style: const TextStyle(fontSize: 12),
+                                            lottoResult.formattedYMDDrawDate,
+                                            style:
+                                                const TextStyle(fontSize: 12),
                                           ),
                                         ],
                                       ),
@@ -193,6 +201,7 @@ class _LottoPageState extends ConsumerState<LottoPage> {
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceEvenly,
+                                            // Row의 자식으로 LottoResult의 WinningNumbers 리스트를 순회하는 map
                                             children: lottoResult.winningNumbers
                                                 .map((number) {
                                               return Padding(
@@ -204,13 +213,14 @@ class _LottoPageState extends ConsumerState<LottoPage> {
                                                     shape: BoxShape.circle,
                                                     border: Border.all(
                                                         color: Colors.black,
-                                                        width: 1.5), // 테두리 색상과 두께
+                                                        width:
+                                                            1.5), // 테두리 색상과 두께
                                                   ),
                                                   child: CircleAvatar(
                                                     radius: 18, // 원의 크기
                                                     backgroundColor:
                                                         primaryYellow,
-            
+
                                                     // 원의 배경색
                                                     child: SignutureFont(
                                                       title: number.toString(),
@@ -236,7 +246,8 @@ class _LottoPageState extends ConsumerState<LottoPage> {
                                                   fontSize: 12),
                                             ),
                                             Text(
-                                              lottoResult.bonusNumber.toString(),
+                                              lottoResult.bonusNumber
+                                                  .toString(),
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 14),
@@ -246,14 +257,16 @@ class _LottoPageState extends ConsumerState<LottoPage> {
                                         const MySizedBox(height: 8),
                                         const Text(
                                           '1등 당첨금',
-                                          style: TextStyle(color: Colors.black54),
+                                          style:
+                                              TextStyle(color: Colors.black54),
                                         ),
                                         SignutureFont2(
-                                            title: '${lottoResult.prizeAmounts}원',
+                                            title:
+                                                '${lottoResult.prizeAmounts}원',
                                             textStyle: bigTextStyle,
                                             strokeTextStyle:
                                                 bigTextStyleWithStroke),
-            
+
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Container(
@@ -281,15 +294,15 @@ class _LottoPageState extends ConsumerState<LottoPage> {
                                             ],
                                           ),
                                         ),
-            
                                       ],
                                     ),
                                     bottomHeight: 200),
                               ),
                               const MySizedBox(height: 16),
-            
+
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0),
                                 child: Container(
                                   width: double.infinity,
                                   height: 240,
@@ -299,15 +312,25 @@ class _LottoPageState extends ConsumerState<LottoPage> {
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   // 여기 if문으로 유저의 해당회차 결과가 있으면 보여주는 코드 삽입
-                                  child: Center(child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center, // 세로 축 중앙 정렬
-                                    crossAxisAlignment: CrossAxisAlignment.center, // 가로 축 중앙 정렬
-                                    children: [
-                                      Image.asset('assets/images/lotto_missing.png', width: 32,),
-                                      const MySizedBox(height: 8),
-                                      const Text('이 라운드에 도전하지 않았습니다.'),
-                                    ],
-                                  ),),
+                                  child: Center(
+                                    //***************여기 컬럼 child에 if문으로 들어가야함 나중에 ***********
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      // 세로 축 중앙 정렬
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      // 가로 축 중앙 정렬
+                                      children: [
+                                        Image.asset(
+                                          'assets/images/lotto_missing.png',
+                                          width: 32,
+                                        ),
+                                        const MySizedBox(height: 8),
+                                        const Text('이 라운드에 도전하지 않았습니다.'),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
 
@@ -338,7 +361,7 @@ class _LottoPageState extends ConsumerState<LottoPage> {
           ),
           // 여기가 웹크롤링...
           // Text('1'),
-        ],//여기가 body전체 마지막
+        ], //여기가 body전체 마지막
       ),
     );
   }

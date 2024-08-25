@@ -6,27 +6,30 @@ part of 'user_game.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$GameImpl _$$GameImplFromJson(Map<String, dynamic> json) => _$GameImpl(
+_$UserGameImpl _$$UserGameImplFromJson(Map<String, dynamic> json) =>
+    _$UserGameImpl(
+      gameId: json['gameId'] as String,
       roundNo: (json['roundNo'] as num).toInt(),
       selectedDrwNos: (json['selectedDrwNos'] as List<dynamic>)
           .map((e) => (e as num).toInt())
-          .toSet(),
+          .toList(),
       playerUid: json['playerUid'] as String,
       result: json['result'] as String?,
       winningNos: (json['winningNos'] as List<dynamic>?)
           ?.map((e) => (e as num).toInt())
-          .toSet(),
+          .toList(),
       matchingCount: (json['matchingCount'] as num?)?.toInt(),
       bonusNo: (json['bonusNo'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$$GameImplToJson(_$GameImpl instance) =>
+Map<String, dynamic> _$$UserGameImplToJson(_$UserGameImpl instance) =>
     <String, dynamic>{
+      'gameId': instance.gameId,
       'roundNo': instance.roundNo,
-      'selectedDrwNos': instance.selectedDrwNos.toList(),
+      'selectedDrwNos': instance.selectedDrwNos,
       'playerUid': instance.playerUid,
       'result': instance.result,
-      'winningNos': instance.winningNos?.toList(),
+      'winningNos': instance.winningNos,
       'matchingCount': instance.matchingCount,
       'bonusNo': instance.bonusNo,
     };

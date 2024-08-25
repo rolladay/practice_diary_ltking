@@ -17,9 +17,6 @@ _$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
       totalSpend: (json['totalSpend'] as num).toDouble(),
       totalPrize: (json['totalPrize'] as num).toDouble(),
       email: json['email'] as String,
-      userGames: (json['userGames'] as List<dynamic>)
-          .map((e) => UserGame.fromJson(e as Map<String, dynamic>))
-          .toList(),
       winningRate: (json['winningRate'] as num?)?.toDouble(),
       rank: (json['rank'] as num?)?.toInt(),
     );
@@ -34,7 +31,6 @@ Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
       'totalSpend': instance.totalSpend,
       'totalPrize': instance.totalPrize,
       'email': instance.email,
-      'userGames': instance.userGames,
       'winningRate': instance.winningRate,
       'rank': instance.rank,
     };

@@ -6,12 +6,12 @@ part of 'user_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$userModelNotifierHash() => r'6aea3f1808350af07c0b8f6d0a982410f3936efc';
+String _$userModelNotifierHash() => r'0a50a8a279d7d368b5ecae4cf86ff22ce55b9a01';
 
 /// See also [UserModelNotifier].
 @ProviderFor(UserModelNotifier)
 final userModelNotifierProvider =
-    AutoDisposeNotifierProvider<UserModelNotifier, UserModel?>.internal(
+    NotifierProvider<UserModelNotifier, UserModel?>.internal(
   UserModelNotifier.new,
   name: r'userModelNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -21,6 +21,6 @@ final userModelNotifierProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$UserModelNotifier = AutoDisposeNotifier<UserModel?>;
+typedef _$UserModelNotifier = Notifier<UserModel?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

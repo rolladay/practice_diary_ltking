@@ -30,7 +30,6 @@ mixin _$UserModel {
   double get totalSpend => throw _privateConstructorUsedError;
   double get totalPrize => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
-  List<UserGame> get userGames => throw _privateConstructorUsedError;
   double? get winningRate => throw _privateConstructorUsedError;
   int? get rank => throw _privateConstructorUsedError;
 
@@ -54,7 +53,6 @@ abstract class $UserModelCopyWith<$Res> {
       double totalSpend,
       double totalPrize,
       String email,
-      List<UserGame> userGames,
       double? winningRate,
       int? rank});
 }
@@ -80,7 +78,6 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? totalSpend = null,
     Object? totalPrize = null,
     Object? email = null,
-    Object? userGames = null,
     Object? winningRate = freezed,
     Object? rank = freezed,
   }) {
@@ -117,10 +114,6 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      userGames: null == userGames
-          ? _value.userGames
-          : userGames // ignore: cast_nullable_to_non_nullable
-              as List<UserGame>,
       winningRate: freezed == winningRate
           ? _value.winningRate
           : winningRate // ignore: cast_nullable_to_non_nullable
@@ -149,7 +142,6 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserModelCopyWith<$Res> {
       double totalSpend,
       double totalPrize,
       String email,
-      List<UserGame> userGames,
       double? winningRate,
       int? rank});
 }
@@ -172,7 +164,6 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? totalSpend = null,
     Object? totalPrize = null,
     Object? email = null,
-    Object? userGames = null,
     Object? winningRate = freezed,
     Object? rank = freezed,
   }) {
@@ -209,10 +200,6 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      userGames: null == userGames
-          ? _value._userGames
-          : userGames // ignore: cast_nullable_to_non_nullable
-              as List<UserGame>,
       winningRate: freezed == winningRate
           ? _value.winningRate
           : winningRate // ignore: cast_nullable_to_non_nullable
@@ -237,10 +224,8 @@ class _$UserImpl implements _User {
       required this.totalSpend,
       required this.totalPrize,
       required this.email,
-      required final List<UserGame> userGames,
       this.winningRate,
-      this.rank})
-      : _userGames = userGames;
+      this.rank});
 
   factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserImplFromJson(json);
@@ -263,14 +248,6 @@ class _$UserImpl implements _User {
   final double totalPrize;
   @override
   final String email;
-  final List<UserGame> _userGames;
-  @override
-  List<UserGame> get userGames {
-    if (_userGames is EqualUnmodifiableListView) return _userGames;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_userGames);
-  }
-
   @override
   final double? winningRate;
   @override
@@ -278,7 +255,7 @@ class _$UserImpl implements _User {
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid, displayName: $displayName, photoUrl: $photoUrl, createdTime: $createdTime, lastSignedIn: $lastSignedIn, totalSpend: $totalSpend, totalPrize: $totalPrize, email: $email, userGames: $userGames, winningRate: $winningRate, rank: $rank)';
+    return 'UserModel(uid: $uid, displayName: $displayName, photoUrl: $photoUrl, createdTime: $createdTime, lastSignedIn: $lastSignedIn, totalSpend: $totalSpend, totalPrize: $totalPrize, email: $email, winningRate: $winningRate, rank: $rank)';
   }
 
   @override
@@ -300,8 +277,6 @@ class _$UserImpl implements _User {
             (identical(other.totalPrize, totalPrize) ||
                 other.totalPrize == totalPrize) &&
             (identical(other.email, email) || other.email == email) &&
-            const DeepCollectionEquality()
-                .equals(other._userGames, _userGames) &&
             (identical(other.winningRate, winningRate) ||
                 other.winningRate == winningRate) &&
             (identical(other.rank, rank) || other.rank == rank));
@@ -319,7 +294,6 @@ class _$UserImpl implements _User {
       totalSpend,
       totalPrize,
       email,
-      const DeepCollectionEquality().hash(_userGames),
       winningRate,
       rank);
 
@@ -347,7 +321,6 @@ abstract class _User implements UserModel {
       required final double totalSpend,
       required final double totalPrize,
       required final String email,
-      required final List<UserGame> userGames,
       final double? winningRate,
       final int? rank}) = _$UserImpl;
 
@@ -371,8 +344,6 @@ abstract class _User implements UserModel {
   double get totalPrize;
   @override
   String get email;
-  @override
-  List<UserGame> get userGames;
   @override
   double? get winningRate;
   @override

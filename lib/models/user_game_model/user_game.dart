@@ -6,14 +6,15 @@ part 'user_game.g.dart';
 @freezed
 class UserGame with _$UserGame {
   factory UserGame({
+    required String gameId,  // 각 게임에 고유 ID 부여
     required int roundNo,
-    required Set<int> selectedDrwNos,
+    required List<int> selectedDrwNos,
     required String playerUid,
     String? result,
-    Set<int>? winningNos,
+    List<int>? winningNos,
     int? matchingCount,
     int? bonusNo,
-  }) = _Game;
+  }) = _UserGame;
 
   factory UserGame.fromJson(Map<String, dynamic> json) => _$UserGameFromJson(json);
 }

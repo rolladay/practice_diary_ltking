@@ -1,8 +1,11 @@
 
+import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
 
 part 'lotto_result.g.dart';
 
+
+//isarDB에 저장한 클래스임
 @collection
 class LottoResult {
   Id id = Isar.autoIncrement; // Isar에서 사용할 고유 ID
@@ -53,4 +56,13 @@ class LottoResult {
       drawDate: DateTime(1970),
     );
   }
+
+  //DateTime 출력시 일정 요건에 맞게 포맷하는 방법
+  String get formattedYMDDrawDate => DateFormat('yyyy-MM-dd').format(drawDate);
+
+  String get nextWeekDrawDate {
+    final nextWeekDate = drawDate.add(const Duration(days: 7));
+    return DateFormat('yyyy-MM-dd').format(nextWeekDate);
+  }
+
 }

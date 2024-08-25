@@ -27,6 +27,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   void initState() {
     super.initState();
 
+    // 이 부분을 해주면 프로파일페이지에서 읽어오네..왜글지?
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // final user = ref.read(authServiceProvider);
+      // if (user != null) {
+      //   ref.read(userModelNotifierProvider.notifier).fetchUser(user.uid);
+      // }
+    });
+    // 여기까지 추가된 부분임
+
     _adManager.initializeBannerAd(
       () {
         setState(() {});
@@ -43,27 +52,31 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     super.dispose();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final userModelNotifier = ref.read(userModelNotifierProvider.notifier);
-    final user = ref.read(authServiceProvider);
-    print(user);
-
-    // 상태가 null인 경우에만 fetch 수행
-    if (user != null && ref.read(userModelNotifierProvider) == null) {
-      userModelNotifier.fetchUser(user.uid);
-      print('Fetched!');
-    }
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   final userModelNotifier = ref.read(userModelNotifierProvider.notifier);
+  //   final user = ref.read(authServiceProvider);
+  //   print(user);
+  //
+  //   // 상태가 null인 경우에만 fetch 수행
+  //   if (user != null && ref.read(userModelNotifierProvider) == null) {
+  //     userModelNotifier.fetchUser(user.uid);
+  //     print('Fetched!');
+  //   }
+  // }
 
 
 
   @override
   Widget build(BuildContext context) {
+
     final auth = ref.read(authServiceProvider.notifier);
     final user = ref.watch(authServiceProvider);
     final userModel = ref.watch(userModelNotifierProvider);
+    final userModelClass = ref.watch(userModelNotifierProvider.notifier);
+
+    print('프로파일페이지 build함수 내 에서 refWatch로 가져온 값 : $userModel');
 
     void goToSignInPage() async {
       await Navigator.of(context).pushReplacement(
@@ -201,7 +214,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                             children: [
                               TableRow(
                                 children: [
-                                  TableCell(
+                                  const TableCell(
                                     child: Padding(
                                       padding: EdgeInsets.all(4.0),
                                       child:
@@ -210,73 +223,66 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   ),
                                   TableCell(
                                       child: Padding(
-                                          padding: EdgeInsets.all(4.0),
-                                          child: Text(userModel
-                                                  ?.userGames.length
-                                                  .toString() ??
-                                              '0'))),
-                                  TableCell(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: Text(userModelClass.getUserGames(userModel!.uid).toString()))),
+                                  const TableCell(
                                       child: Padding(
                                           padding: EdgeInsets.all(4.0),
                                           child: Text('당첨 게임수',
                                               style: tableTextStyle))),
                                   TableCell(
                                       child: Padding(
-                                          padding: EdgeInsets.all(4.0),
+                                          padding: const EdgeInsets.all(4.0),
                                           child: Text(
-                                              userModel?.email ?? 'no mail'))),
+                                              userModel.email))),
                                 ],
                               ),
                               TableRow(
                                 children: [
-                                  TableCell(
+                                  const TableCell(
                                       child: Padding(
                                           padding: EdgeInsets.all(4.0),
                                           child: Text('적중률',
                                               style: tableTextStyle))),
                                   TableCell(
                                       child: Padding(
-                                          padding: EdgeInsets.all(4.0),
-                                          child: Text(userModel?.winningRate
-                                                  .toString() ??
-                                              '0'))),
-                                  TableCell(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: Text(userModel.winningRate
+                                                  .toString()))),
+                                  const TableCell(
                                       child: Padding(
                                           padding: EdgeInsets.all(4.0),
                                           child: Text('최고 성적',
                                               style: tableTextStyle))),
                                   TableCell(
                                       child: Padding(
-                                          padding: EdgeInsets.all(4.0),
+                                          padding: const EdgeInsets.all(4.0),
                                           child: Text(
-                                              userModel?.rank.toString() ??
-                                                  'No Rank'))),
+                                              userModel.rank.toString()))),
                                 ],
                               ),
                               TableRow(
                                 children: [
-                                  TableCell(
+                                  const TableCell(
                                       child: Padding(
                                           padding: EdgeInsets.all(4.0),
                                           child: Text('총 지출',
                                               style: tableTextStyle))),
                                   TableCell(
                                       child: Padding(
-                                          padding: EdgeInsets.all(4.0),
-                                          child: Text(userModel?.totalSpend
-                                                  .toString() ??
-                                              '0'))),
-                                  TableCell(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: Text(userModel.totalSpend
+                                                  .toString()))),
+                                  const TableCell(
                                       child: Padding(
                                           padding: EdgeInsets.all(4.0),
                                           child: Text('총 상금',
                                               style: tableTextStyle))),
                                   TableCell(
                                       child: Padding(
-                                          padding: EdgeInsets.all(4.0),
-                                          child: Text(userModel?.totalPrize
-                                                  .toString() ??
-                                              '0'))),
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: Text(userModel.totalPrize
+                                                  .toString()))),
                                 ],
                               ),
                             ],
@@ -291,13 +297,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 future: isar.getLatestLottoResult(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator(); // 데이터를 로딩 중일 때 보여줄 위젯
+                    return const CircularProgressIndicator(); // 데이터를 로딩 중일 때 보여줄 위젯
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}'); // 에러 발생 시 보여줄 위젯
                   } else if (snapshot.hasData) {
                     return Text(snapshot.data!.drawDate.toString()); // 데이터가 존재할 때 보여줄 위젯
                   } else {
-                    return Text('No data'); // 데이터가 없을 때 보여줄 위젯
+                    return const Text('No data'); // 데이터가 없을 때 보여줄 위젯
                   }
                 },
               ),

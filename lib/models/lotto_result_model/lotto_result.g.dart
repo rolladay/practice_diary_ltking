@@ -27,18 +27,28 @@ const LottoResultSchema = CollectionSchema(
       name: r'drawDate',
       type: IsarType.dateTime,
     ),
-    r'prizeAmounts': PropertySchema(
+    r'formattedYMDDrawDate': PropertySchema(
       id: 2,
+      name: r'formattedYMDDrawDate',
+      type: IsarType.string,
+    ),
+    r'nextWeekDrawDate': PropertySchema(
+      id: 3,
+      name: r'nextWeekDrawDate',
+      type: IsarType.string,
+    ),
+    r'prizeAmounts': PropertySchema(
+      id: 4,
       name: r'prizeAmounts',
       type: IsarType.string,
     ),
     r'roundNumber': PropertySchema(
-      id: 3,
+      id: 5,
       name: r'roundNumber',
       type: IsarType.long,
     ),
     r'winningNumbers': PropertySchema(
-      id: 4,
+      id: 6,
       name: r'winningNumbers',
       type: IsarType.longList,
     )
@@ -77,6 +87,8 @@ int _lottoResultEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.formattedYMDDrawDate.length * 3;
+  bytesCount += 3 + object.nextWeekDrawDate.length * 3;
   bytesCount += 3 + object.prizeAmounts.length * 3;
   bytesCount += 3 + object.winningNumbers.length * 8;
   return bytesCount;
@@ -90,9 +102,11 @@ void _lottoResultSerialize(
 ) {
   writer.writeLong(offsets[0], object.bonusNumber);
   writer.writeDateTime(offsets[1], object.drawDate);
-  writer.writeString(offsets[2], object.prizeAmounts);
-  writer.writeLong(offsets[3], object.roundNumber);
-  writer.writeLongList(offsets[4], object.winningNumbers);
+  writer.writeString(offsets[2], object.formattedYMDDrawDate);
+  writer.writeString(offsets[3], object.nextWeekDrawDate);
+  writer.writeString(offsets[4], object.prizeAmounts);
+  writer.writeLong(offsets[5], object.roundNumber);
+  writer.writeLongList(offsets[6], object.winningNumbers);
 }
 
 LottoResult _lottoResultDeserialize(
@@ -104,9 +118,9 @@ LottoResult _lottoResultDeserialize(
   final object = LottoResult(
     bonusNumber: reader.readLong(offsets[0]),
     drawDate: reader.readDateTime(offsets[1]),
-    prizeAmounts: reader.readString(offsets[2]),
-    roundNumber: reader.readLong(offsets[3]),
-    winningNumbers: reader.readLongList(offsets[4]) ?? [],
+    prizeAmounts: reader.readString(offsets[4]),
+    roundNumber: reader.readLong(offsets[5]),
+    winningNumbers: reader.readLongList(offsets[6]) ?? [],
   );
   object.id = id;
   return object;
@@ -126,8 +140,12 @@ P _lottoResultDeserializeProp<P>(
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 4:
+      return (reader.readString(offset)) as P;
+    case 5:
+      return (reader.readLong(offset)) as P;
+    case 6:
       return (reader.readLongList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -492,6 +510,142 @@ extension LottoResultQueryFilter
     });
   }
 
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      formattedYMDDrawDateEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'formattedYMDDrawDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      formattedYMDDrawDateGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'formattedYMDDrawDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      formattedYMDDrawDateLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'formattedYMDDrawDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      formattedYMDDrawDateBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'formattedYMDDrawDate',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      formattedYMDDrawDateStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'formattedYMDDrawDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      formattedYMDDrawDateEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'formattedYMDDrawDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      formattedYMDDrawDateContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'formattedYMDDrawDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      formattedYMDDrawDateMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'formattedYMDDrawDate',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      formattedYMDDrawDateIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'formattedYMDDrawDate',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      formattedYMDDrawDateIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'formattedYMDDrawDate',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition> idEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
@@ -541,6 +695,142 @@ extension LottoResultQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      nextWeekDrawDateEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'nextWeekDrawDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      nextWeekDrawDateGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'nextWeekDrawDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      nextWeekDrawDateLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'nextWeekDrawDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      nextWeekDrawDateBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'nextWeekDrawDate',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      nextWeekDrawDateStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'nextWeekDrawDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      nextWeekDrawDateEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'nextWeekDrawDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      nextWeekDrawDateContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'nextWeekDrawDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      nextWeekDrawDateMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'nextWeekDrawDate',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      nextWeekDrawDateIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'nextWeekDrawDate',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      nextWeekDrawDateIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'nextWeekDrawDate',
+        value: '',
       ));
     });
   }
@@ -915,6 +1205,34 @@ extension LottoResultQuerySortBy
     });
   }
 
+  QueryBuilder<LottoResult, LottoResult, QAfterSortBy>
+      sortByFormattedYMDDrawDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'formattedYMDDrawDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterSortBy>
+      sortByFormattedYMDDrawDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'formattedYMDDrawDate', Sort.desc);
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterSortBy>
+      sortByNextWeekDrawDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'nextWeekDrawDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterSortBy>
+      sortByNextWeekDrawDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'nextWeekDrawDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<LottoResult, LottoResult, QAfterSortBy> sortByPrizeAmounts() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'prizeAmounts', Sort.asc);
@@ -967,6 +1285,20 @@ extension LottoResultQuerySortThenBy
     });
   }
 
+  QueryBuilder<LottoResult, LottoResult, QAfterSortBy>
+      thenByFormattedYMDDrawDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'formattedYMDDrawDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterSortBy>
+      thenByFormattedYMDDrawDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'formattedYMDDrawDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<LottoResult, LottoResult, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -976,6 +1308,20 @@ extension LottoResultQuerySortThenBy
   QueryBuilder<LottoResult, LottoResult, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterSortBy>
+      thenByNextWeekDrawDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'nextWeekDrawDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterSortBy>
+      thenByNextWeekDrawDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'nextWeekDrawDate', Sort.desc);
     });
   }
 
@@ -1019,6 +1365,22 @@ extension LottoResultQueryWhereDistinct
     });
   }
 
+  QueryBuilder<LottoResult, LottoResult, QDistinct>
+      distinctByFormattedYMDDrawDate({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'formattedYMDDrawDate',
+          caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QDistinct> distinctByNextWeekDrawDate(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'nextWeekDrawDate',
+          caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<LottoResult, LottoResult, QDistinct> distinctByPrizeAmounts(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1056,6 +1418,20 @@ extension LottoResultQueryProperty
   QueryBuilder<LottoResult, DateTime, QQueryOperations> drawDateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'drawDate');
+    });
+  }
+
+  QueryBuilder<LottoResult, String, QQueryOperations>
+      formattedYMDDrawDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'formattedYMDDrawDate');
+    });
+  }
+
+  QueryBuilder<LottoResult, String, QQueryOperations>
+      nextWeekDrawDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'nextWeekDrawDate');
     });
   }
 

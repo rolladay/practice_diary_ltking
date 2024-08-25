@@ -7,14 +7,16 @@ import '../../models/user_model/user_model.dart';
 
 part 'auth_service.g.dart';
 
+
+// auth서비스는 상태값은 firebaseAuth(User?), notifier로는 구글사인인(최초UserModel파베업로드,이후 lastSignedIn),
+// 사인아웃 2개의 메소드만 있다.
 @riverpod
 class AuthService extends _$AuthService {
-  // 인스턴스 생성
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  //프로바이더 초기 state정의
   @override
   User? build() => _auth.currentUser;
 
@@ -35,8 +37,7 @@ class AuthService extends _$AuthService {
 
       if (firebaseUser != null) {
         final userDoc = await _firestore.collection('users').doc(firebaseUser.uid).get();
-
-        // 사용자 문서가 없다면, 즉 처음 로그인한 사용자라면
+        // 이게 UserModel 생성 시 파이어베이스에 동일한 데이터 구조 만드는 부분임
         if (!userDoc.exists) {
           final newUser = UserModel(
             uid: firebaseUser.uid,
@@ -45,15 +46,14 @@ class AuthService extends _$AuthService {
             photoUrl: firebaseUser.photoURL ?? '',
             createdTime: DateTime.now(),
             lastSignedIn: DateTime.now(),
+            // 나중에 기존 total spend, prize, userGame, winningRate 등등 있으면 기존꺼 쓰고 없으면 업데이트
             totalSpend: 0,
             totalPrize: 0,
-            userGames: [],
           );
 
           // newUser 객체를 json형태로 저장하는 부분
           await _firestore.collection('users').doc(firebaseUser.uid).set(newUser.toJson());
         } else {
-          // 첫 로그인 사용자가 아니라면 lastSignedIn만 업데이트
           await _firestore.collection('users').doc(firebaseUser.uid).update({
             'lastSignedIn': DateTime.now(),
           });
@@ -61,11 +61,9 @@ class AuthService extends _$AuthService {
         }
         //초기에 _auth.currentUser가 null이었을 것이기 떄문에 사인인 후 아래 user로 업데이트 하는 부분
         state = firebaseUser;
-        print('Google User: $googleUser'); // 있음
-        print('Firebase User: $firebaseUser'); // 있음
       }
     } catch (e) {
-      print('Google 로그인 실패: $e');
+      print('Google SignIn Failed : $e');
     }
   }
 

@@ -15,16 +15,17 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 UserGame _$UserGameFromJson(Map<String, dynamic> json) {
-  return _Game.fromJson(json);
+  return _UserGame.fromJson(json);
 }
 
 /// @nodoc
 mixin _$UserGame {
+  String get gameId => throw _privateConstructorUsedError; // 각 게임에 고유 ID 부여
   int get roundNo => throw _privateConstructorUsedError;
-  Set<int> get selectedDrwNos => throw _privateConstructorUsedError;
+  List<int> get selectedDrwNos => throw _privateConstructorUsedError;
   String get playerUid => throw _privateConstructorUsedError;
   String? get result => throw _privateConstructorUsedError;
-  Set<int>? get winningNos => throw _privateConstructorUsedError;
+  List<int>? get winningNos => throw _privateConstructorUsedError;
   int? get matchingCount => throw _privateConstructorUsedError;
   int? get bonusNo => throw _privateConstructorUsedError;
 
@@ -40,11 +41,12 @@ abstract class $UserGameCopyWith<$Res> {
       _$UserGameCopyWithImpl<$Res, UserGame>;
   @useResult
   $Res call(
-      {int roundNo,
-      Set<int> selectedDrwNos,
+      {String gameId,
+      int roundNo,
+      List<int> selectedDrwNos,
       String playerUid,
       String? result,
-      Set<int>? winningNos,
+      List<int>? winningNos,
       int? matchingCount,
       int? bonusNo});
 }
@@ -62,6 +64,7 @@ class _$UserGameCopyWithImpl<$Res, $Val extends UserGame>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? gameId = null,
     Object? roundNo = null,
     Object? selectedDrwNos = null,
     Object? playerUid = null,
@@ -71,6 +74,10 @@ class _$UserGameCopyWithImpl<$Res, $Val extends UserGame>
     Object? bonusNo = freezed,
   }) {
     return _then(_value.copyWith(
+      gameId: null == gameId
+          ? _value.gameId
+          : gameId // ignore: cast_nullable_to_non_nullable
+              as String,
       roundNo: null == roundNo
           ? _value.roundNo
           : roundNo // ignore: cast_nullable_to_non_nullable
@@ -78,7 +85,7 @@ class _$UserGameCopyWithImpl<$Res, $Val extends UserGame>
       selectedDrwNos: null == selectedDrwNos
           ? _value.selectedDrwNos
           : selectedDrwNos // ignore: cast_nullable_to_non_nullable
-              as Set<int>,
+              as List<int>,
       playerUid: null == playerUid
           ? _value.playerUid
           : playerUid // ignore: cast_nullable_to_non_nullable
@@ -90,7 +97,7 @@ class _$UserGameCopyWithImpl<$Res, $Val extends UserGame>
       winningNos: freezed == winningNos
           ? _value.winningNos
           : winningNos // ignore: cast_nullable_to_non_nullable
-              as Set<int>?,
+              as List<int>?,
       matchingCount: freezed == matchingCount
           ? _value.matchingCount
           : matchingCount // ignore: cast_nullable_to_non_nullable
@@ -104,32 +111,36 @@ class _$UserGameCopyWithImpl<$Res, $Val extends UserGame>
 }
 
 /// @nodoc
-abstract class _$$GameImplCopyWith<$Res> implements $UserGameCopyWith<$Res> {
-  factory _$$GameImplCopyWith(
-          _$GameImpl value, $Res Function(_$GameImpl) then) =
-      __$$GameImplCopyWithImpl<$Res>;
+abstract class _$$UserGameImplCopyWith<$Res>
+    implements $UserGameCopyWith<$Res> {
+  factory _$$UserGameImplCopyWith(
+          _$UserGameImpl value, $Res Function(_$UserGameImpl) then) =
+      __$$UserGameImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
-      {int roundNo,
-      Set<int> selectedDrwNos,
+      {String gameId,
+      int roundNo,
+      List<int> selectedDrwNos,
       String playerUid,
       String? result,
-      Set<int>? winningNos,
+      List<int>? winningNos,
       int? matchingCount,
       int? bonusNo});
 }
 
 /// @nodoc
-class __$$GameImplCopyWithImpl<$Res>
-    extends _$UserGameCopyWithImpl<$Res, _$GameImpl>
-    implements _$$GameImplCopyWith<$Res> {
-  __$$GameImplCopyWithImpl(_$GameImpl _value, $Res Function(_$GameImpl) _then)
+class __$$UserGameImplCopyWithImpl<$Res>
+    extends _$UserGameCopyWithImpl<$Res, _$UserGameImpl>
+    implements _$$UserGameImplCopyWith<$Res> {
+  __$$UserGameImplCopyWithImpl(
+      _$UserGameImpl _value, $Res Function(_$UserGameImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? gameId = null,
     Object? roundNo = null,
     Object? selectedDrwNos = null,
     Object? playerUid = null,
@@ -138,7 +149,11 @@ class __$$GameImplCopyWithImpl<$Res>
     Object? matchingCount = freezed,
     Object? bonusNo = freezed,
   }) {
-    return _then(_$GameImpl(
+    return _then(_$UserGameImpl(
+      gameId: null == gameId
+          ? _value.gameId
+          : gameId // ignore: cast_nullable_to_non_nullable
+              as String,
       roundNo: null == roundNo
           ? _value.roundNo
           : roundNo // ignore: cast_nullable_to_non_nullable
@@ -146,7 +161,7 @@ class __$$GameImplCopyWithImpl<$Res>
       selectedDrwNos: null == selectedDrwNos
           ? _value._selectedDrwNos
           : selectedDrwNos // ignore: cast_nullable_to_non_nullable
-              as Set<int>,
+              as List<int>,
       playerUid: null == playerUid
           ? _value.playerUid
           : playerUid // ignore: cast_nullable_to_non_nullable
@@ -158,7 +173,7 @@ class __$$GameImplCopyWithImpl<$Res>
       winningNos: freezed == winningNos
           ? _value._winningNos
           : winningNos // ignore: cast_nullable_to_non_nullable
-              as Set<int>?,
+              as List<int>?,
       matchingCount: freezed == matchingCount
           ? _value.matchingCount
           : matchingCount // ignore: cast_nullable_to_non_nullable
@@ -173,43 +188,47 @@ class __$$GameImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$GameImpl implements _Game {
-  _$GameImpl(
-      {required this.roundNo,
-      required final Set<int> selectedDrwNos,
+class _$UserGameImpl implements _UserGame {
+  _$UserGameImpl(
+      {required this.gameId,
+      required this.roundNo,
+      required final List<int> selectedDrwNos,
       required this.playerUid,
       this.result,
-      final Set<int>? winningNos,
+      final List<int>? winningNos,
       this.matchingCount,
       this.bonusNo})
       : _selectedDrwNos = selectedDrwNos,
         _winningNos = winningNos;
 
-  factory _$GameImpl.fromJson(Map<String, dynamic> json) =>
-      _$$GameImplFromJson(json);
+  factory _$UserGameImpl.fromJson(Map<String, dynamic> json) =>
+      _$$UserGameImplFromJson(json);
 
   @override
-  final int roundNo;
-  final Set<int> _selectedDrwNos;
+  final String gameId;
+// 각 게임에 고유 ID 부여
   @override
-  Set<int> get selectedDrwNos {
-    if (_selectedDrwNos is EqualUnmodifiableSetView) return _selectedDrwNos;
+  final int roundNo;
+  final List<int> _selectedDrwNos;
+  @override
+  List<int> get selectedDrwNos {
+    if (_selectedDrwNos is EqualUnmodifiableListView) return _selectedDrwNos;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableSetView(_selectedDrwNos);
+    return EqualUnmodifiableListView(_selectedDrwNos);
   }
 
   @override
   final String playerUid;
   @override
   final String? result;
-  final Set<int>? _winningNos;
+  final List<int>? _winningNos;
   @override
-  Set<int>? get winningNos {
+  List<int>? get winningNos {
     final value = _winningNos;
     if (value == null) return null;
-    if (_winningNos is EqualUnmodifiableSetView) return _winningNos;
+    if (_winningNos is EqualUnmodifiableListView) return _winningNos;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableSetView(value);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
@@ -219,14 +238,15 @@ class _$GameImpl implements _Game {
 
   @override
   String toString() {
-    return 'UserGame(roundNo: $roundNo, selectedDrwNos: $selectedDrwNos, playerUid: $playerUid, result: $result, winningNos: $winningNos, matchingCount: $matchingCount, bonusNo: $bonusNo)';
+    return 'UserGame(gameId: $gameId, roundNo: $roundNo, selectedDrwNos: $selectedDrwNos, playerUid: $playerUid, result: $result, winningNos: $winningNos, matchingCount: $matchingCount, bonusNo: $bonusNo)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$GameImpl &&
+            other is _$UserGameImpl &&
+            (identical(other.gameId, gameId) || other.gameId == gameId) &&
             (identical(other.roundNo, roundNo) || other.roundNo == roundNo) &&
             const DeepCollectionEquality()
                 .equals(other._selectedDrwNos, _selectedDrwNos) &&
@@ -244,6 +264,7 @@ class _$GameImpl implements _Game {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      gameId,
       roundNo,
       const DeepCollectionEquality().hash(_selectedDrwNos),
       playerUid,
@@ -255,45 +276,49 @@ class _$GameImpl implements _Game {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$GameImplCopyWith<_$GameImpl> get copyWith =>
-      __$$GameImplCopyWithImpl<_$GameImpl>(this, _$identity);
+  _$$UserGameImplCopyWith<_$UserGameImpl> get copyWith =>
+      __$$UserGameImplCopyWithImpl<_$UserGameImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$GameImplToJson(
+    return _$$UserGameImplToJson(
       this,
     );
   }
 }
 
-abstract class _Game implements UserGame {
-  factory _Game(
-      {required final int roundNo,
-      required final Set<int> selectedDrwNos,
+abstract class _UserGame implements UserGame {
+  factory _UserGame(
+      {required final String gameId,
+      required final int roundNo,
+      required final List<int> selectedDrwNos,
       required final String playerUid,
       final String? result,
-      final Set<int>? winningNos,
+      final List<int>? winningNos,
       final int? matchingCount,
-      final int? bonusNo}) = _$GameImpl;
+      final int? bonusNo}) = _$UserGameImpl;
 
-  factory _Game.fromJson(Map<String, dynamic> json) = _$GameImpl.fromJson;
+  factory _UserGame.fromJson(Map<String, dynamic> json) =
+      _$UserGameImpl.fromJson;
 
   @override
+  String get gameId;
+  @override // 각 게임에 고유 ID 부여
   int get roundNo;
   @override
-  Set<int> get selectedDrwNos;
+  List<int> get selectedDrwNos;
   @override
   String get playerUid;
   @override
   String? get result;
   @override
-  Set<int>? get winningNos;
+  List<int>? get winningNos;
   @override
   int? get matchingCount;
   @override
   int? get bonusNo;
   @override
   @JsonKey(ignore: true)
-  _$$GameImplCopyWith<_$GameImpl> get copyWith =>
+  _$$UserGameImplCopyWith<_$UserGameImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

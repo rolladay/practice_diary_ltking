@@ -8,6 +8,8 @@ import 'package:kingoflotto/pages/rank_page.dart';
 import 'package:kingoflotto/pages/draw_page.dart';
 import '../constants/color_constants.dart';
 import '../constants/my_bnb_list.dart';
+import '../features/auth/auth_service.dart';
+import '../features/user_service/user_provider.dart';
 import 'lotto_page.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -18,7 +20,8 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  int _selectedIndex = 0;
+  // 홈페이지로 랜딩 후 처음 보여줄 화면 > LottoPage로 설정
+  int _selectedIndex = 1;
 
   static final List<Widget> _widgetOptions = [
     const RankPage(),

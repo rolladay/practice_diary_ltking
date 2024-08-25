@@ -17,13 +17,14 @@ class UserModel with _$UserModel {
     required double totalSpend,
     required double totalPrize,
     required String email,
-    required List<UserGame> userGames,
     double? winningRate,
     int? rank,
   }) = _User;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
 }
+
+
 
 class TimestampConverter implements JsonConverter<DateTime, Timestamp> {
   const TimestampConverter();
