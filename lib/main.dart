@@ -38,12 +38,10 @@ void main() async {
     await Future.wait([
       MobileAds.instance.initialize(),
       IsarService().initialize(),
-    ]);
+    ],);
 
     runApp(
-      const ProviderScope(
-        child: MyApp(),
-      ),
+      const ProviderScope(child: MyApp()),
     );
   } catch (e, stackTrace) {
     FirebaseCrashlytics.instance.recordError(e, stackTrace);
@@ -51,8 +49,6 @@ void main() async {
     FlutterNativeSplash.remove();
   }
 }
-
-
 
 //My App부분
 class MyApp extends StatelessWidget {
@@ -62,6 +58,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Lotto King',
+      // ThemeData는 font컬러 이런것보다 BNB 테마라거나, 메인 컬러 설정정도에만!
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: primaryOrange),
         splashFactory: InkRipple.splashFactory,

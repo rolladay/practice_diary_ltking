@@ -7,6 +7,7 @@ part 'user_provider.g.dart';
 
 
 // user 객체를 업데이트 할 때 사용하는데, auth랑 구분해서 사용하면 될듯
+// 초기값은 null이지만, 이 후 state는 UserModel 객체이며, Notifier는 이 메소드 접근가능한 class의미
 
 @Riverpod(keepAlive: true)
 class UserModelNotifier extends _$UserModelNotifier {
@@ -14,14 +15,11 @@ class UserModelNotifier extends _$UserModelNotifier {
   UserModel? build() => null;
 
   // 주어진 user 객체를 가지고 firebase에 update 및 상태관리
+  // 즉 UserModel의 바뀐 정보를 정리하고 나서 UserModel에 업데이트 쳐주는 작업
   Future<void> updateUser(UserModel updatedUser) async {
     try {
-      print('업데이트유저1');
-
       // 직렬화된 JSON 객체를 Firestore에 저장
       final data = updatedUser.toJson();
-      print('업데이트유저2');
-
       // Firestore에 데이터 업데이트 시도
       await FirebaseFirestore.instance
           .collection('users')
@@ -54,6 +52,7 @@ class UserModelNotifier extends _$UserModelNotifier {
   }
 
 
+  // UserGame객체 받고, uid 받아서 유저컬렉션 내 games 에 게임객체 추가
   Future<void> addGameToUser(UserGame game, String userId) async {
     try {
       await FirebaseFirestore.instance
@@ -70,10 +69,7 @@ class UserModelNotifier extends _$UserModelNotifier {
   }
 
 
-
-
-
-
+  // uid 받아서 유저게임리스트 받아오기
   Future<List<UserGame>> getUserGames(String userId) async {
     try {
       QuerySnapshot snapshot = await FirebaseFirestore.instance
@@ -82,7 +78,6 @@ class UserModelNotifier extends _$UserModelNotifier {
           .collection('userGames')
           .orderBy('roundNo', descending: true)
           .get();
-
       return snapshot.docs.map((doc) => UserGame.fromJson(doc.data() as Map<String, dynamic>)).toList();
     } catch (e) {
       print('게임 데이터를 가져오는 중 오류 발생: $e');
@@ -90,6 +85,7 @@ class UserModelNotifier extends _$UserModelNotifier {
     }
   }
 
+  // uid, roundNo받아서 해당 라운드 게임만 받아오기
   Future<List<UserGame>> getUserGamesByRound(String userId, int roundNo) async {
     try {
       QuerySnapshot snapshot = await FirebaseFirestore.instance

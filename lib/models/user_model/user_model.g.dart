@@ -19,6 +19,8 @@ _$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
       email: json['email'] as String,
       winningRate: (json['winningRate'] as num?)?.toDouble(),
       rank: (json['rank'] as num?)?.toInt(),
+      exp: (json['exp'] as num?)?.toDouble(),
+      maxGames: (json['maxGames'] as num?)?.toInt() ?? 5,
     );
 
 Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
@@ -33,4 +35,6 @@ Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
       'email': instance.email,
       'winningRate': instance.winningRate,
       'rank': instance.rank,
+      'exp': instance.exp,
+      'maxGames': instance.maxGames,
     };

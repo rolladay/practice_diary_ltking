@@ -23,7 +23,6 @@ final TextStyle appBarTitleTextStyleWithStroke = GoogleFonts.blackHanSans(
 final TextStyle ballTextStyle = GoogleFonts.blackHanSans(
   fontSize: 21,
   color: Colors.white,
-
 );
 
 final TextStyle ballTextStyleWithStroke = GoogleFonts.blackHanSans(
@@ -48,6 +47,22 @@ final TextStyle bigTextStyleWithStroke = GoogleFonts.blackHanSans(
   foreground: Paint()
     ..style = PaintingStyle.stroke
     ..strokeWidth = 1.5
+    ..color = Colors.black, // 스트로크 색상
+);
+
+
+final TextStyle bigTextStyle2 = GoogleFonts.blackHanSans(
+  fontSize: 72,
+  color: primaryYellow,
+
+);
+
+final TextStyle bigTextStyleWithStroke2 = GoogleFonts.blackHanSans(
+  fontSize: 72,
+
+  foreground: Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 2
     ..color = Colors.black, // 스트로크 색상
 );
 

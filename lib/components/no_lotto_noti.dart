@@ -21,7 +21,7 @@ class NoLottoNoti extends StatelessWidget {
         const MySizedBox(height: 20),
         const Center(
           child: Text(
-            '이번 회차에 등록한 게임이 없으시군요! \n번호를 뽑든 구매한 로또를 등록하든 하세요.',
+            '아직 도전한 게임이 없으시군요! \n번호를 뽑거나 구매한 로또번호를 등록해보십시오',
             style: TextStyle(
                 color: Colors.black45, fontSize: 14),
             textAlign: TextAlign.center,

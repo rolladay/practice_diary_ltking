@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:kingoflotto/models/user_game_model/user_game.dart';
-
 
 part 'user_model.freezed.dart';
 part 'user_model.g.dart';
@@ -19,6 +17,8 @@ class UserModel with _$UserModel {
     required String email,
     double? winningRate,
     int? rank,
+    double? exp,
+    @Default(5) int maxGames,
   }) = _User;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);

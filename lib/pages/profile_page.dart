@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kingoflotto/components/my_container.dart';
 import 'package:kingoflotto/components/my_sizedbox.dart';
 import 'package:kingoflotto/constants/fonts_constants.dart';
-import 'package:kingoflotto/features/admob/ad_service.dart';
 import 'package:kingoflotto/features/isar_db/isar_service.dart';
 import 'package:kingoflotto/pages/signin_page.dart';
+import '../components/ad_banner_widget.dart';
 import '../constants/color_constants.dart';
 import '../features/auth/auth_service.dart';
+import '../features/debug/cache_reset.dart';
 import '../features/user_service/user_provider.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
@@ -19,58 +20,10 @@ class ProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
-  final AdManager _adManager = AdManager();
-
   final isar = IsarService();
 
   @override
-  void initState() {
-    super.initState();
-
-    // 이 부분을 해주면 프로파일페이지에서 읽어오네..왜글지?
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // final user = ref.read(authServiceProvider);
-      // if (user != null) {
-      //   ref.read(userModelNotifierProvider.notifier).fetchUser(user.uid);
-      // }
-    });
-    // 여기까지 추가된 부분임
-
-    _adManager.initializeBannerAd(
-      () {
-        setState(() {});
-      },
-      (ad, error) {
-        print('BannerAd failed to load: $error');
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    _adManager.dispose();
-    super.dispose();
-  }
-
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   final userModelNotifier = ref.read(userModelNotifierProvider.notifier);
-  //   final user = ref.read(authServiceProvider);
-  //   print(user);
-  //
-  //   // 상태가 null인 경우에만 fetch 수행
-  //   if (user != null && ref.read(userModelNotifierProvider) == null) {
-  //     userModelNotifier.fetchUser(user.uid);
-  //     print('Fetched!');
-  //   }
-  // }
-
-
-
-  @override
   Widget build(BuildContext context) {
-
     final auth = ref.read(authServiceProvider.notifier);
     final user = ref.watch(authServiceProvider);
     final userModel = ref.watch(userModelNotifierProvider);
@@ -134,26 +87,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               const MySizedBox(
                 height: 8,
               ),
-              (_adManager.isBannerAdReady)
-                  ? SizedBox(
-                      height: _adManager.bannerAd.size.height.toDouble(),
-                      width: _adManager.bannerAd.size.width.toDouble(),
-                      child: AdWidget(ad: _adManager.bannerAd),
-                    )
-                  : Container(
-                      width: 320,
-                      height: 50,
-                      color: backGroundColor,
-                      child: Center(
-                        child: SizedBox(
-                            width: 36,
-                            height: 36,
-                            child: CircularProgressIndicator(
-                              color: primaryOrange,
-                              strokeWidth: 2,
-                            )),
-                      ),
-                    ),
+              const AdBannerWidget(),
               const MySizedBox(height: 8),
               MyContainer(
                   upperChild: const Padding(
@@ -162,7 +96,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       children: [
                         Text('Player License'),
                         Spacer(),
-                        Text(''),
+                        Text(
+                          'LV 01',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
                       ],
                     ),
                   ),
@@ -175,8 +112,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: Colors.grey, // 테두리 색상
-                            width: 1.0, // 테두리 두께
+                            color: Colors.black54, // 테두리 색상
+                            width: 1.5, // 테두리 두께
                           ),
                         ),
                         child: ClipOval(
@@ -189,6 +126,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           ),
                         ),
                       ),
+                      // 여기서 쓰이는 UserModel은 riverpod에서 가져오는 값이다. 앱 실행시 쭉 관리되는 상태임.
+                      // 즉, 로그인 후부터 로그인한 유저의 UserModel 의 state를 가지고 보여주는 부분으로
+                      // fireStore와 통신이나 서버간 통신이 없음.
                       const MySizedBox(height: 8),
                       Text(
                         userModel?.displayName ?? 'No User',
@@ -197,7 +137,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                             fontWeight: FontWeight.bold,
                             color: primaryBlack),
                       ),
+                      // 여기 유저 comment 들어갈 자리
+                      const Text(
+                        '난 앞으로도 열심히 살아갈꺼야.',
+                        style: TextStyle(color: Colors.black54, fontSize: 12),
+                      ),
                       const MySizedBox(height: 8),
+
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -224,7 +170,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   TableCell(
                                       child: Padding(
                                           padding: const EdgeInsets.all(4.0),
-                                          child: Text(userModelClass.getUserGames(userModel!.uid).toString()))),
+                                          child: Text(userModelClass
+                                              .getUserGames(userModel!.uid)
+                                              .toString()))),
                                   const TableCell(
                                       child: Padding(
                                           padding: EdgeInsets.all(4.0),
@@ -233,8 +181,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   TableCell(
                                       child: Padding(
                                           padding: const EdgeInsets.all(4.0),
-                                          child: Text(
-                                              userModel.email))),
+                                          child: Text(userModel.email))),
                                 ],
                               ),
                               TableRow(
@@ -248,7 +195,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       child: Padding(
                                           padding: const EdgeInsets.all(4.0),
                                           child: Text(userModel.winningRate
-                                                  .toString()))),
+                                              .toString()))),
                                   const TableCell(
                                       child: Padding(
                                           padding: EdgeInsets.all(4.0),
@@ -257,8 +204,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   TableCell(
                                       child: Padding(
                                           padding: const EdgeInsets.all(4.0),
-                                          child: Text(
-                                              userModel.rank.toString()))),
+                                          child:
+                                              Text(userModel.rank.toString()))),
                                 ],
                               ),
                               TableRow(
@@ -272,7 +219,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       child: Padding(
                                           padding: const EdgeInsets.all(4.0),
                                           child: Text(userModel.totalSpend
-                                                  .toString()))),
+                                              .toString()))),
                                   const TableCell(
                                       child: Padding(
                                           padding: EdgeInsets.all(4.0),
@@ -282,7 +229,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       child: Padding(
                                           padding: const EdgeInsets.all(4.0),
                                           child: Text(userModel.totalPrize
-                                                  .toString()))),
+                                              .toString()))),
                                 ],
                               ),
                             ],
@@ -291,8 +238,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       ),
                     ],
                   ),
-                  bottomHeight: 320),
+                  bottomHeight: 600),
 
+              // 이 부분은 LottoResult 최근꺼 확인할라고 있는 부분임... 나중에 없앨수도?
               FutureBuilder(
                 future: isar.getLatestLottoResult(),
                 builder: (context, snapshot) {
@@ -301,13 +249,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}'); // 에러 발생 시 보여줄 위젯
                   } else if (snapshot.hasData) {
-                    return Text(snapshot.data!.drawDate.toString()); // 데이터가 존재할 때 보여줄 위젯
+                    return Text(snapshot.data!.drawDate
+                        .toString()); // 데이터가 존재할 때 보여줄 위젯
                   } else {
                     return const Text('No data'); // 데이터가 없을 때 보여줄 위젯
                   }
                 },
               ),
-
 
               ElevatedButton(
                 child: const Text('로그아웃또'),
@@ -316,6 +264,17 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   goToSignInPage();
                   // 로그아웃 후 필요한 네비게이션 로직 (예: 로그인 페이지로 이동)
                 },
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  await deleteAppCache(); // 캐시 삭제 함수 호출
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('캐시가 삭제되었습니다.'),
+                    ),
+                  );
+                },
+                child: Text('캐시 삭제'),
               ),
             ],
           ),

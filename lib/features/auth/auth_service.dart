@@ -4,9 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../models/user_model/user_model.dart';
 
-
 part 'auth_service.g.dart';
-
 
 // auth서비스는 상태값은 firebaseAuth(User?), notifier로는 구글사인인(최초UserModel파베업로드,이후 lastSignedIn),
 // 사인아웃 2개의 메소드만 있다.
@@ -49,6 +47,8 @@ class AuthService extends _$AuthService {
             // 나중에 기존 total spend, prize, userGame, winningRate 등등 있으면 기존꺼 쓰고 없으면 업데이트
             totalSpend: 0,
             totalPrize: 0,
+            exp: 0,
+            maxGames: 5,
           );
 
           // newUser 객체를 json형태로 저장하는 부분

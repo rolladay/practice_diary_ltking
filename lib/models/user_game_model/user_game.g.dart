@@ -14,12 +14,12 @@ _$UserGameImpl _$$UserGameImplFromJson(Map<String, dynamic> json) =>
           .map((e) => (e as num).toInt())
           .toList(),
       playerUid: json['playerUid'] as String,
-      result: json['result'] as String?,
+      resultRank: (json['resultRank'] as num?)?.toInt(),
       winningNos: (json['winningNos'] as List<dynamic>?)
           ?.map((e) => (e as num).toInt())
           .toList(),
       matchingCount: (json['matchingCount'] as num?)?.toInt(),
-      bonusNo: (json['bonusNo'] as num?)?.toInt(),
+      donateAmount: (json['donateAmount'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$$UserGameImplToJson(_$UserGameImpl instance) =>
@@ -28,8 +28,8 @@ Map<String, dynamic> _$$UserGameImplToJson(_$UserGameImpl instance) =>
       'roundNo': instance.roundNo,
       'selectedDrwNos': instance.selectedDrwNos,
       'playerUid': instance.playerUid,
-      'result': instance.result,
+      'resultRank': instance.resultRank,
       'winningNos': instance.winningNos,
       'matchingCount': instance.matchingCount,
-      'bonusNo': instance.bonusNo,
+      'donateAmount': instance.donateAmount,
     };

@@ -1,34 +1,41 @@
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+part 'ad_service.g.dart';
 
-// AD몹서비스는 기성품으로 대략 정해져있어 따로 자세히 살펴보지 않는다.
-class AdManager {
+class AdState {
+  final bool isReady;
+  final BannerAd? ad;
+  AdState({required this.isReady, this.ad});
+}
+
+@Riverpod(keepAlive: true)
+class AdManager extends _$AdManager {
   late BannerAd _bannerAd;
-  bool isBannerAdReady = false;
 
-  void initializeBannerAd(Function onAdLoaded, Function(Ad, LoadAdError) onAdFailedToLoad) {
+  @override
+  AdState build() {
+    _initializeBannerAd();
+    return AdState(isReady: false, ad: null);
+  }
+
+  void _initializeBannerAd() {
     _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-3940256099942544/6300978111', // 테스트 광고 ID, 나중에 내 id로 변경
+      adUnitId: 'ca-app-pub-3940256099942544/6300978111', // 테스트 광고 ID
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
-          isBannerAdReady = true;
-          onAdLoaded();
+          state = AdState(isReady: true, ad: _bannerAd);
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
           ad.dispose();
-          onAdFailedToLoad(ad, error);
+          state = AdState(isReady: false, ad: null);
+          print('BannerAd failed to load: $error');
         },
       ),
     );
 
     _bannerAd.load();
-  }
-
-  BannerAd get bannerAd => _bannerAd;
-
-  void dispose() {
-    _bannerAd.dispose();
   }
 }

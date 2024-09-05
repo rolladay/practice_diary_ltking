@@ -42,13 +42,28 @@ const LottoResultSchema = CollectionSchema(
       name: r'prizeAmounts',
       type: IsarType.string,
     ),
-    r'roundNumber': PropertySchema(
+    r'prizeAmounts2': PropertySchema(
       id: 5,
+      name: r'prizeAmounts2',
+      type: IsarType.string,
+    ),
+    r'prizeAmounts3': PropertySchema(
+      id: 6,
+      name: r'prizeAmounts3',
+      type: IsarType.string,
+    ),
+    r'roundNumber': PropertySchema(
+      id: 7,
       name: r'roundNumber',
       type: IsarType.long,
     ),
+    r'winners': PropertySchema(
+      id: 8,
+      name: r'winners',
+      type: IsarType.string,
+    ),
     r'winningNumbers': PropertySchema(
-      id: 6,
+      id: 9,
       name: r'winningNumbers',
       type: IsarType.longList,
     )
@@ -90,6 +105,9 @@ int _lottoResultEstimateSize(
   bytesCount += 3 + object.formattedYMDDrawDate.length * 3;
   bytesCount += 3 + object.nextWeekDrawDate.length * 3;
   bytesCount += 3 + object.prizeAmounts.length * 3;
+  bytesCount += 3 + object.prizeAmounts2.length * 3;
+  bytesCount += 3 + object.prizeAmounts3.length * 3;
+  bytesCount += 3 + object.winners.length * 3;
   bytesCount += 3 + object.winningNumbers.length * 8;
   return bytesCount;
 }
@@ -105,8 +123,11 @@ void _lottoResultSerialize(
   writer.writeString(offsets[2], object.formattedYMDDrawDate);
   writer.writeString(offsets[3], object.nextWeekDrawDate);
   writer.writeString(offsets[4], object.prizeAmounts);
-  writer.writeLong(offsets[5], object.roundNumber);
-  writer.writeLongList(offsets[6], object.winningNumbers);
+  writer.writeString(offsets[5], object.prizeAmounts2);
+  writer.writeString(offsets[6], object.prizeAmounts3);
+  writer.writeLong(offsets[7], object.roundNumber);
+  writer.writeString(offsets[8], object.winners);
+  writer.writeLongList(offsets[9], object.winningNumbers);
 }
 
 LottoResult _lottoResultDeserialize(
@@ -119,8 +140,11 @@ LottoResult _lottoResultDeserialize(
     bonusNumber: reader.readLong(offsets[0]),
     drawDate: reader.readDateTime(offsets[1]),
     prizeAmounts: reader.readString(offsets[4]),
-    roundNumber: reader.readLong(offsets[5]),
-    winningNumbers: reader.readLongList(offsets[6]) ?? [],
+    prizeAmounts2: reader.readString(offsets[5]),
+    prizeAmounts3: reader.readString(offsets[6]),
+    roundNumber: reader.readLong(offsets[7]),
+    winners: reader.readString(offsets[8]),
+    winningNumbers: reader.readLongList(offsets[9]) ?? [],
   );
   object.id = id;
   return object;
@@ -144,8 +168,14 @@ P _lottoResultDeserializeProp<P>(
     case 4:
       return (reader.readString(offset)) as P;
     case 5:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 6:
+      return (reader.readString(offset)) as P;
+    case 7:
+      return (reader.readLong(offset)) as P;
+    case 8:
+      return (reader.readString(offset)) as P;
+    case 9:
       return (reader.readLongList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -972,6 +1002,278 @@ extension LottoResultQueryFilter
   }
 
   QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      prizeAmounts2EqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'prizeAmounts2',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      prizeAmounts2GreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'prizeAmounts2',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      prizeAmounts2LessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'prizeAmounts2',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      prizeAmounts2Between(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'prizeAmounts2',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      prizeAmounts2StartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'prizeAmounts2',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      prizeAmounts2EndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'prizeAmounts2',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      prizeAmounts2Contains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'prizeAmounts2',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      prizeAmounts2Matches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'prizeAmounts2',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      prizeAmounts2IsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'prizeAmounts2',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      prizeAmounts2IsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'prizeAmounts2',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      prizeAmounts3EqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'prizeAmounts3',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      prizeAmounts3GreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'prizeAmounts3',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      prizeAmounts3LessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'prizeAmounts3',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      prizeAmounts3Between(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'prizeAmounts3',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      prizeAmounts3StartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'prizeAmounts3',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      prizeAmounts3EndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'prizeAmounts3',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      prizeAmounts3Contains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'prizeAmounts3',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      prizeAmounts3Matches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'prizeAmounts3',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      prizeAmounts3IsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'prizeAmounts3',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      prizeAmounts3IsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'prizeAmounts3',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
       roundNumberEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -1023,6 +1325,140 @@ extension LottoResultQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition> winnersEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'winners',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      winnersGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'winners',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition> winnersLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'winners',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition> winnersBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'winners',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      winnersStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'winners',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition> winnersEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'winners',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition> winnersContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'winners',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition> winnersMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'winners',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      winnersIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'winners',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterFilterCondition>
+      winnersIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'winners',
+        value: '',
       ));
     });
   }
@@ -1246,6 +1682,32 @@ extension LottoResultQuerySortBy
     });
   }
 
+  QueryBuilder<LottoResult, LottoResult, QAfterSortBy> sortByPrizeAmounts2() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'prizeAmounts2', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterSortBy>
+      sortByPrizeAmounts2Desc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'prizeAmounts2', Sort.desc);
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterSortBy> sortByPrizeAmounts3() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'prizeAmounts3', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterSortBy>
+      sortByPrizeAmounts3Desc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'prizeAmounts3', Sort.desc);
+    });
+  }
+
   QueryBuilder<LottoResult, LottoResult, QAfterSortBy> sortByRoundNumber() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'roundNumber', Sort.asc);
@@ -1255,6 +1717,18 @@ extension LottoResultQuerySortBy
   QueryBuilder<LottoResult, LottoResult, QAfterSortBy> sortByRoundNumberDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'roundNumber', Sort.desc);
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterSortBy> sortByWinners() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'winners', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterSortBy> sortByWinnersDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'winners', Sort.desc);
     });
   }
 }
@@ -1338,6 +1812,32 @@ extension LottoResultQuerySortThenBy
     });
   }
 
+  QueryBuilder<LottoResult, LottoResult, QAfterSortBy> thenByPrizeAmounts2() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'prizeAmounts2', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterSortBy>
+      thenByPrizeAmounts2Desc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'prizeAmounts2', Sort.desc);
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterSortBy> thenByPrizeAmounts3() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'prizeAmounts3', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterSortBy>
+      thenByPrizeAmounts3Desc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'prizeAmounts3', Sort.desc);
+    });
+  }
+
   QueryBuilder<LottoResult, LottoResult, QAfterSortBy> thenByRoundNumber() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'roundNumber', Sort.asc);
@@ -1347,6 +1847,18 @@ extension LottoResultQuerySortThenBy
   QueryBuilder<LottoResult, LottoResult, QAfterSortBy> thenByRoundNumberDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'roundNumber', Sort.desc);
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterSortBy> thenByWinners() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'winners', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QAfterSortBy> thenByWinnersDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'winners', Sort.desc);
     });
   }
 }
@@ -1388,9 +1900,32 @@ extension LottoResultQueryWhereDistinct
     });
   }
 
+  QueryBuilder<LottoResult, LottoResult, QDistinct> distinctByPrizeAmounts2(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'prizeAmounts2',
+          caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QDistinct> distinctByPrizeAmounts3(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'prizeAmounts3',
+          caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<LottoResult, LottoResult, QDistinct> distinctByRoundNumber() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'roundNumber');
+    });
+  }
+
+  QueryBuilder<LottoResult, LottoResult, QDistinct> distinctByWinners(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'winners', caseSensitive: caseSensitive);
     });
   }
 
@@ -1441,9 +1976,27 @@ extension LottoResultQueryProperty
     });
   }
 
+  QueryBuilder<LottoResult, String, QQueryOperations> prizeAmounts2Property() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'prizeAmounts2');
+    });
+  }
+
+  QueryBuilder<LottoResult, String, QQueryOperations> prizeAmounts3Property() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'prizeAmounts3');
+    });
+  }
+
   QueryBuilder<LottoResult, int, QQueryOperations> roundNumberProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'roundNumber');
+    });
+  }
+
+  QueryBuilder<LottoResult, String, QQueryOperations> winnersProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'winners');
     });
   }
 

@@ -11,6 +11,7 @@ import '../constants/my_bnb_list.dart';
 import '../features/auth/auth_service.dart';
 import '../features/user_service/user_provider.dart';
 import 'lotto_page.dart';
+import 'lotto_page_test.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../constants/color_constants.dart';
 import '../constants/fonts_constants.dart';
 
@@ -15,9 +15,7 @@ class RankPage extends StatelessWidget {
         centerTitle: true,
         title: Column(
           children: [
-            SizedBox(
-              height: 8,
-            ),
+            SizedBox(height: 8),
             Stack(
               children: [
                 // Stroke Text
@@ -39,9 +37,7 @@ class RankPage extends StatelessWidget {
             'assets/images/lotto_more.png',
             width: 32,
           ),
-          const SizedBox(
-            width: 16,
-          )
+          const SizedBox(width: 16),
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
@@ -51,21 +47,37 @@ class RankPage extends StatelessWidget {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          Center(
-            child: Text('컬럼'),
-          ),
-          Container(
-            width: 200,
-            child: Center(
-              child: Text(
-                  '여기에는 firebase UserCollection에 있는 유저들을 상금순으로 보여준다..'),
-            ),
-          ),
-          Text(
-              '리스트뷰빌더로 보여주는데 파이어베이스의 Pagination을 이용해서 보여준다.'),
-        ],
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .orderBy('exp', descending: true)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+            var users = snapshot.data!.docs;
+
+            return ListView.builder(
+              itemCount: users.length,
+              itemBuilder: (context, index) {
+                var user = users[index];
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(user['photoUrl']),
+                  ),
+                  title: Text(user['displayName']),
+                  subtitle: Text('경험치: ${user['exp'].toString()}'),
+                  trailing: Text('${index + 1}위'),
+                );
+              },
+            );
+          } else {
+            return const Center(child: Text('순위가 없습니다.'));
+          }
+        },
       ),
     );
   }

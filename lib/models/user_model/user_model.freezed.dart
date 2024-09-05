@@ -32,6 +32,8 @@ mixin _$UserModel {
   String get email => throw _privateConstructorUsedError;
   double? get winningRate => throw _privateConstructorUsedError;
   int? get rank => throw _privateConstructorUsedError;
+  double? get exp => throw _privateConstructorUsedError;
+  int get maxGames => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -54,7 +56,9 @@ abstract class $UserModelCopyWith<$Res> {
       double totalPrize,
       String email,
       double? winningRate,
-      int? rank});
+      int? rank,
+      double? exp,
+      int maxGames});
 }
 
 /// @nodoc
@@ -80,6 +84,8 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? email = null,
     Object? winningRate = freezed,
     Object? rank = freezed,
+    Object? exp = freezed,
+    Object? maxGames = null,
   }) {
     return _then(_value.copyWith(
       uid: null == uid
@@ -122,6 +128,14 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.rank
           : rank // ignore: cast_nullable_to_non_nullable
               as int?,
+      exp: freezed == exp
+          ? _value.exp
+          : exp // ignore: cast_nullable_to_non_nullable
+              as double?,
+      maxGames: null == maxGames
+          ? _value.maxGames
+          : maxGames // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -143,7 +157,9 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserModelCopyWith<$Res> {
       double totalPrize,
       String email,
       double? winningRate,
-      int? rank});
+      int? rank,
+      double? exp,
+      int maxGames});
 }
 
 /// @nodoc
@@ -166,6 +182,8 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? email = null,
     Object? winningRate = freezed,
     Object? rank = freezed,
+    Object? exp = freezed,
+    Object? maxGames = null,
   }) {
     return _then(_$UserImpl(
       uid: null == uid
@@ -208,6 +226,14 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value.rank
           : rank // ignore: cast_nullable_to_non_nullable
               as int?,
+      exp: freezed == exp
+          ? _value.exp
+          : exp // ignore: cast_nullable_to_non_nullable
+              as double?,
+      maxGames: null == maxGames
+          ? _value.maxGames
+          : maxGames // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -225,7 +251,9 @@ class _$UserImpl implements _User {
       required this.totalPrize,
       required this.email,
       this.winningRate,
-      this.rank});
+      this.rank,
+      this.exp,
+      this.maxGames = 5});
 
   factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserImplFromJson(json);
@@ -252,10 +280,15 @@ class _$UserImpl implements _User {
   final double? winningRate;
   @override
   final int? rank;
+  @override
+  final double? exp;
+  @override
+  @JsonKey()
+  final int maxGames;
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid, displayName: $displayName, photoUrl: $photoUrl, createdTime: $createdTime, lastSignedIn: $lastSignedIn, totalSpend: $totalSpend, totalPrize: $totalPrize, email: $email, winningRate: $winningRate, rank: $rank)';
+    return 'UserModel(uid: $uid, displayName: $displayName, photoUrl: $photoUrl, createdTime: $createdTime, lastSignedIn: $lastSignedIn, totalSpend: $totalSpend, totalPrize: $totalPrize, email: $email, winningRate: $winningRate, rank: $rank, exp: $exp, maxGames: $maxGames)';
   }
 
   @override
@@ -279,7 +312,10 @@ class _$UserImpl implements _User {
             (identical(other.email, email) || other.email == email) &&
             (identical(other.winningRate, winningRate) ||
                 other.winningRate == winningRate) &&
-            (identical(other.rank, rank) || other.rank == rank));
+            (identical(other.rank, rank) || other.rank == rank) &&
+            (identical(other.exp, exp) || other.exp == exp) &&
+            (identical(other.maxGames, maxGames) ||
+                other.maxGames == maxGames));
   }
 
   @JsonKey(ignore: true)
@@ -295,7 +331,9 @@ class _$UserImpl implements _User {
       totalPrize,
       email,
       winningRate,
-      rank);
+      rank,
+      exp,
+      maxGames);
 
   @JsonKey(ignore: true)
   @override
@@ -322,7 +360,9 @@ abstract class _User implements UserModel {
       required final double totalPrize,
       required final String email,
       final double? winningRate,
-      final int? rank}) = _$UserImpl;
+      final int? rank,
+      final double? exp,
+      final int maxGames}) = _$UserImpl;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
 
@@ -348,6 +388,10 @@ abstract class _User implements UserModel {
   double? get winningRate;
   @override
   int? get rank;
+  @override
+  double? get exp;
+  @override
+  int get maxGames;
   @override
   @JsonKey(ignore: true)
   _$$UserImplCopyWith<_$UserImpl> get copyWith =>

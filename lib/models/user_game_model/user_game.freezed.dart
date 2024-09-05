@@ -24,10 +24,10 @@ mixin _$UserGame {
   int get roundNo => throw _privateConstructorUsedError;
   List<int> get selectedDrwNos => throw _privateConstructorUsedError;
   String get playerUid => throw _privateConstructorUsedError;
-  String? get result => throw _privateConstructorUsedError;
+  int? get resultRank => throw _privateConstructorUsedError;
   List<int>? get winningNos => throw _privateConstructorUsedError;
   int? get matchingCount => throw _privateConstructorUsedError;
-  int? get bonusNo => throw _privateConstructorUsedError;
+  double? get donateAmount => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -45,10 +45,10 @@ abstract class $UserGameCopyWith<$Res> {
       int roundNo,
       List<int> selectedDrwNos,
       String playerUid,
-      String? result,
+      int? resultRank,
       List<int>? winningNos,
       int? matchingCount,
-      int? bonusNo});
+      double? donateAmount});
 }
 
 /// @nodoc
@@ -68,10 +68,10 @@ class _$UserGameCopyWithImpl<$Res, $Val extends UserGame>
     Object? roundNo = null,
     Object? selectedDrwNos = null,
     Object? playerUid = null,
-    Object? result = freezed,
+    Object? resultRank = freezed,
     Object? winningNos = freezed,
     Object? matchingCount = freezed,
-    Object? bonusNo = freezed,
+    Object? donateAmount = freezed,
   }) {
     return _then(_value.copyWith(
       gameId: null == gameId
@@ -90,10 +90,10 @@ class _$UserGameCopyWithImpl<$Res, $Val extends UserGame>
           ? _value.playerUid
           : playerUid // ignore: cast_nullable_to_non_nullable
               as String,
-      result: freezed == result
-          ? _value.result
-          : result // ignore: cast_nullable_to_non_nullable
-              as String?,
+      resultRank: freezed == resultRank
+          ? _value.resultRank
+          : resultRank // ignore: cast_nullable_to_non_nullable
+              as int?,
       winningNos: freezed == winningNos
           ? _value.winningNos
           : winningNos // ignore: cast_nullable_to_non_nullable
@@ -102,10 +102,10 @@ class _$UserGameCopyWithImpl<$Res, $Val extends UserGame>
           ? _value.matchingCount
           : matchingCount // ignore: cast_nullable_to_non_nullable
               as int?,
-      bonusNo: freezed == bonusNo
-          ? _value.bonusNo
-          : bonusNo // ignore: cast_nullable_to_non_nullable
-              as int?,
+      donateAmount: freezed == donateAmount
+          ? _value.donateAmount
+          : donateAmount // ignore: cast_nullable_to_non_nullable
+              as double?,
     ) as $Val);
   }
 }
@@ -123,10 +123,10 @@ abstract class _$$UserGameImplCopyWith<$Res>
       int roundNo,
       List<int> selectedDrwNos,
       String playerUid,
-      String? result,
+      int? resultRank,
       List<int>? winningNos,
       int? matchingCount,
-      int? bonusNo});
+      double? donateAmount});
 }
 
 /// @nodoc
@@ -144,10 +144,10 @@ class __$$UserGameImplCopyWithImpl<$Res>
     Object? roundNo = null,
     Object? selectedDrwNos = null,
     Object? playerUid = null,
-    Object? result = freezed,
+    Object? resultRank = freezed,
     Object? winningNos = freezed,
     Object? matchingCount = freezed,
-    Object? bonusNo = freezed,
+    Object? donateAmount = freezed,
   }) {
     return _then(_$UserGameImpl(
       gameId: null == gameId
@@ -166,10 +166,10 @@ class __$$UserGameImplCopyWithImpl<$Res>
           ? _value.playerUid
           : playerUid // ignore: cast_nullable_to_non_nullable
               as String,
-      result: freezed == result
-          ? _value.result
-          : result // ignore: cast_nullable_to_non_nullable
-              as String?,
+      resultRank: freezed == resultRank
+          ? _value.resultRank
+          : resultRank // ignore: cast_nullable_to_non_nullable
+              as int?,
       winningNos: freezed == winningNos
           ? _value._winningNos
           : winningNos // ignore: cast_nullable_to_non_nullable
@@ -178,10 +178,10 @@ class __$$UserGameImplCopyWithImpl<$Res>
           ? _value.matchingCount
           : matchingCount // ignore: cast_nullable_to_non_nullable
               as int?,
-      bonusNo: freezed == bonusNo
-          ? _value.bonusNo
-          : bonusNo // ignore: cast_nullable_to_non_nullable
-              as int?,
+      donateAmount: freezed == donateAmount
+          ? _value.donateAmount
+          : donateAmount // ignore: cast_nullable_to_non_nullable
+              as double?,
     ));
   }
 }
@@ -194,10 +194,10 @@ class _$UserGameImpl implements _UserGame {
       required this.roundNo,
       required final List<int> selectedDrwNos,
       required this.playerUid,
-      this.result,
+      this.resultRank,
       final List<int>? winningNos,
       this.matchingCount,
-      this.bonusNo})
+      this.donateAmount})
       : _selectedDrwNos = selectedDrwNos,
         _winningNos = winningNos;
 
@@ -220,7 +220,7 @@ class _$UserGameImpl implements _UserGame {
   @override
   final String playerUid;
   @override
-  final String? result;
+  final int? resultRank;
   final List<int>? _winningNos;
   @override
   List<int>? get winningNos {
@@ -234,11 +234,11 @@ class _$UserGameImpl implements _UserGame {
   @override
   final int? matchingCount;
   @override
-  final int? bonusNo;
+  final double? donateAmount;
 
   @override
   String toString() {
-    return 'UserGame(gameId: $gameId, roundNo: $roundNo, selectedDrwNos: $selectedDrwNos, playerUid: $playerUid, result: $result, winningNos: $winningNos, matchingCount: $matchingCount, bonusNo: $bonusNo)';
+    return 'UserGame(gameId: $gameId, roundNo: $roundNo, selectedDrwNos: $selectedDrwNos, playerUid: $playerUid, resultRank: $resultRank, winningNos: $winningNos, matchingCount: $matchingCount, donateAmount: $donateAmount)';
   }
 
   @override
@@ -252,12 +252,14 @@ class _$UserGameImpl implements _UserGame {
                 .equals(other._selectedDrwNos, _selectedDrwNos) &&
             (identical(other.playerUid, playerUid) ||
                 other.playerUid == playerUid) &&
-            (identical(other.result, result) || other.result == result) &&
+            (identical(other.resultRank, resultRank) ||
+                other.resultRank == resultRank) &&
             const DeepCollectionEquality()
                 .equals(other._winningNos, _winningNos) &&
             (identical(other.matchingCount, matchingCount) ||
                 other.matchingCount == matchingCount) &&
-            (identical(other.bonusNo, bonusNo) || other.bonusNo == bonusNo));
+            (identical(other.donateAmount, donateAmount) ||
+                other.donateAmount == donateAmount));
   }
 
   @JsonKey(ignore: true)
@@ -268,10 +270,10 @@ class _$UserGameImpl implements _UserGame {
       roundNo,
       const DeepCollectionEquality().hash(_selectedDrwNos),
       playerUid,
-      result,
+      resultRank,
       const DeepCollectionEquality().hash(_winningNos),
       matchingCount,
-      bonusNo);
+      donateAmount);
 
   @JsonKey(ignore: true)
   @override
@@ -293,10 +295,10 @@ abstract class _UserGame implements UserGame {
       required final int roundNo,
       required final List<int> selectedDrwNos,
       required final String playerUid,
-      final String? result,
+      final int? resultRank,
       final List<int>? winningNos,
       final int? matchingCount,
-      final int? bonusNo}) = _$UserGameImpl;
+      final double? donateAmount}) = _$UserGameImpl;
 
   factory _UserGame.fromJson(Map<String, dynamic> json) =
       _$UserGameImpl.fromJson;
@@ -310,13 +312,13 @@ abstract class _UserGame implements UserGame {
   @override
   String get playerUid;
   @override
-  String? get result;
+  int? get resultRank;
   @override
   List<int>? get winningNos;
   @override
   int? get matchingCount;
   @override
-  int? get bonusNo;
+  double? get donateAmount;
   @override
   @JsonKey(ignore: true)
   _$$UserGameImplCopyWith<_$UserGameImpl> get copyWith =>

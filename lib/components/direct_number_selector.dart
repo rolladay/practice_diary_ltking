@@ -13,6 +13,9 @@ import '../constants/fonts_constants.dart';
 import '../features/user_service/user_provider.dart';
 import '../models/user_game_model/user_game.dart';
 
+
+// 중요한 부분 유저가 번호를 어찌어찌 선택해서 저장버튼을 누르면, FB에 저장되고, 캐시에 저장된후
+// userGame 객체를 이전화면인 DrawPage로 보내는 화면이다.
 class NumberSelectionScreen extends ConsumerStatefulWidget {
   final int roundNo;
   final String playerUid;
@@ -33,6 +36,7 @@ class NumberSelectionScreenState extends ConsumerState<NumberSelectionScreen> {
   Timer? autoSelectTimer;
 
 
+  // 번호선택 함수
   void toggleNumberSelection(int number) {
     setState(() {
       if (selectedNos.contains(number)) {
@@ -44,49 +48,7 @@ class NumberSelectionScreenState extends ConsumerState<NumberSelectionScreen> {
     });
   }
 
-  Future<void> saveSelection() async {
-    if (isSaveButtonEnabled) {
-      // 현재 사용자의 해당 roundNo에 저장된 게임 개수를 가져옴
-      final userGameCollection = FirebaseFirestore.instance
-          .collection('users')
-          .doc(widget.playerUid)
-          .collection('userGames');
-
-      QuerySnapshot existingGames = await userGameCollection
-          .where('roundNo', isEqualTo: widget.roundNo)
-          .get();
-
-      // 게임 개수를 기준으로 gameId 생성 (001, 002, 003 ...)
-      final gameCount = existingGames.size + 1;
-      final gameId = '${widget.playerUid}_${widget.roundNo}_${gameCount.toString().padLeft(3, '0')}';
-
-      // 새로운 UserGame 객체 생성
-      UserGame userGame = UserGame(
-        gameId: gameId,  // 고유한 gameId
-        roundNo: widget.roundNo,
-        selectedDrwNos: selectedNos,
-        playerUid: widget.playerUid,
-      );
-
-      // Firestore에 저장
-      await ref.read(userModelNotifierProvider.notifier).addGameToUser(userGame, widget.playerUid);
-
-
-
-      // 간단한 캐시 저장 - ############## 이 부분이 신규 ################ 잘못되면 이거부터 지워라!!!
-      final cacheManager = DefaultCacheManager();
-      final cacheKey = 'user_game_${widget.playerUid}_${widget.roundNo}';
-      final jsonData = jsonEncode(userGame.toJson()); // UserGame 객체를 JSON으로 변환
-      final bytes = Uint8List.fromList(jsonData.codeUnits); // List<int>를 Uint8List로 변환
-      await cacheManager.putFile(cacheKey, bytes);
-
-      // 선택된 번호 반환 및 화면 닫기
-      if (mounted) {
-        Navigator.pop(context, userGame);
-      }
-    }
-  }
-
+  // 자동생성 함수
   void generateRandomNumbers() {
     if (selectedNos.length >= 6 || isGenerating) return;
 
@@ -122,6 +84,48 @@ class NumberSelectionScreenState extends ConsumerState<NumberSelectionScreen> {
         });
       }
     });
+  }
+
+
+
+  // 내가 선택한 6개의 번호를 파베 및 캐시에 저장 후 pop 하면서 이전 화면으로 전달하는 함수
+  Future<void> saveSelection() async {
+    if (isSaveButtonEnabled) {
+      //처음으로 userGames 컬렉션을 정의
+      final userGameCollection = FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.playerUid)
+          .collection('userGames');
+      // 게임아이디 생성을 위한 부분 안중요
+      QuerySnapshot existingGames = await userGameCollection
+          .where('roundNo', isEqualTo: widget.roundNo)
+          .get();
+      // 게임 개수를 기준으로 gameId 생성 (001, 002, 003 ...)
+      final gameCount = existingGames.size + 1;
+      final gameId = '${widget.playerUid}_${widget.roundNo}_${gameCount.toString().padLeft(3, '0')}';
+
+      // 새로운 UserGame 객체 생성
+      UserGame userGame = UserGame(
+        gameId: gameId,  // 고유한 gameId
+        roundNo: widget.roundNo,
+        selectedDrwNos: selectedNos,
+        playerUid: widget.playerUid,
+      );
+      // Firestore에 저장 addGameToUser
+      await ref.read(userModelNotifierProvider.notifier).addGameToUser(userGame, widget.playerUid);
+
+      // 간단한 캐시 저장 - ############## 이 부분이 신규 ################ 잘못되면 이거부터 지워라!!!
+      // final cacheManager = DefaultCacheManager();
+      // final cacheKey = 'user_game_${widget.playerUid}_${widget.roundNo}';
+      // final jsonData = jsonEncode(userGame.toJson()); // UserGame 객체를 JSON으로 변환
+      // final bytes = Uint8List.fromList(jsonData.codeUnits); // List<int>를 Uint8List로 변환
+      // await cacheManager.putFile(cacheKey, bytes);
+
+      // 선택된 번호 반환 및 화면 닫기
+      if (mounted) {
+        Navigator.pop(context, userGame);
+      }
+    }
   }
 
   @override
@@ -244,7 +248,7 @@ class NumberSelectionScreenState extends ConsumerState<NumberSelectionScreen> {
                           backgroundColor: isSelected ? specialBlue : Colors.grey,
                           child: Text(
                             '$number',
-                            style: TextStyle(color: Colors.white, fontSize: 14),
+                            style: const TextStyle(color: Colors.white, fontSize: 14),
                           ),
                         ),
                       );

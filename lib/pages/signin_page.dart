@@ -18,6 +18,7 @@ class SignInPage extends ConsumerStatefulWidget {
 }
 
 class _SignInPageState extends ConsumerState<SignInPage> {
+
   @override
   void initState() {
     super.initState();
@@ -29,32 +30,29 @@ class _SignInPageState extends ConsumerState<SignInPage> {
           systemNavigationBarIconBrightness: Brightness.light,
         ),
       );
-      await _checkAndFetchUser();
-      _checkCurrentUser();
+
+      await _initializeUser();
     });
   }
 
-  Future<void> _checkAndFetchUser() async {
+  // user정보 초기화해주는 걸 SignIn Page에서 해주는 것
+  Future<void> _initializeUser() async {
     final authUser = ref.read(authServiceProvider);
     final userModelNotifier = ref.read(userModelNotifierProvider.notifier);
 
     if (authUser != null) {
+      // Fetch user data > UserModel의 퓨쳐 반환
       await userModelNotifier.fetchUser(authUser.uid);
-    }
-  }
-
-  Future<void> _checkCurrentUser() async {
-    final authUser = ref.read(authServiceProvider);
-    final userModelNotifier = ref.read(userModelNotifierProvider.notifier);
-
-    if (authUser != null) {
+      // Update last signed in
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
       final DateTime now = DateTime.now();
       final Map<String, dynamic> userData = {
         'lastSignedIn': now,
+        // 'irukke' : 'hamyundoie' - 이 키가 없으면 생성 있으면 업뎃. 오케이?
       };
       await firestore.collection('users').doc(authUser.uid).update(userData);
-      await userModelNotifier.fetchUser(authUser.uid);
+
+      // Navigate to home after a delay
       Timer(const Duration(seconds: 1), navigateToHome);
     }
   }

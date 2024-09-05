@@ -10,10 +10,10 @@ class UserGame with _$UserGame {
     required int roundNo,
     required List<int> selectedDrwNos,
     required String playerUid,
-    String? result,
+    int? resultRank,
     List<int>? winningNos,
     int? matchingCount,
-    int? bonusNo,
+    double? donateAmount,
   }) = _UserGame;
 
   factory UserGame.fromJson(Map<String, dynamic> json) => _$UserGameFromJson(json);
