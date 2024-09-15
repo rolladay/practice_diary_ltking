@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kingoflotto/components/my_sizedbox.dart';
 
 import '../constants/color_constants.dart';
+import '../features/lotto_service/lotto_functions.dart';
 import '../features/lotto_service/usergame_manager.dart';
 import '../models/lotto_result_model/lotto_result.dart';
 import '../models/user_game_model/user_game.dart';
@@ -83,7 +84,7 @@ class GameResultAnalysis extends StatelessWidget {
         const Spacer(),
         TextButton(
           style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all<Color>(specialBlue),
+            foregroundColor: WidgetStateProperty.all<Color>(specialBlue),
           ),
           onPressed: () {
             showModalBottomSheet(
@@ -104,67 +105,95 @@ class GameResultAnalysis extends StatelessWidget {
                   });
 
                 return Container(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
                   // 모달 내부 여백 설정
                   child: Column(
-                    mainAxisSize: MainAxisSize.min, // 내용물에 맞게 크기 조정
-                    children: sortedGames.map((userGame) {
-                      // 3. resultRank가 0이면 '액땜'으로 표시
-                      String rankText = userGame.resultRank == 0
-                          ? '액땜'
-                          : '${userGame.resultRank}등';
-
-                      return ListTile(
-                        subtitle: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('$rankText :', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
-                            Row(
-                              children: userGame.selectedDrwNos.map((number) {
-                                // 5. winningNos에 있는 숫자에 대해 색상 및 텍스트 스타일 변경
-                                bool isWinningNumber =
-                                    userGame.winningNos?.contains(number) ??
-                                        false;
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 4.0),
-                                  child: Container(
-                                    width: 38.0,
-                                    // 동그라미의 가로 크기
-                                    height: 38.0,
-                                    // 동그라미의 세로 크기
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: primaryBlack, // 테두리 색상
-                                        width: 1.0, // 테두리 두께
-                                      ),
-                                      color: isWinningNumber
-                                          ? primaryYellow
-                                          : Colors.grey,
-                                    ),
-                                    alignment: Alignment.center,
-                                    // 텍스트 가운데 정렬
-                                    child: Text(
-                                      number.toString(),
-                                      style: TextStyle(
-                                        color: isWinningNumber
-                                            ? Colors.black
-                                            : Colors.white, // 글씨 색상
-                                        fontWeight: isWinningNumber
-                                            ? FontWeight.bold
-                                            : FontWeight.normal, // 글씨 굵기
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ],
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Center(
+                        child: Container(
+                          height: 3,
+                          width: 60,
+                          color: primaryBlack,
                         ),
-                      );
-                    }).toList(),
+                      ),
+                      const MySizedBox(height: 8),
+                      const Text(
+                        '상세결과',
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w600),
+                      ),
+                      const MySizedBox(height: 16),
+                      SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min, // 내용물에 맞게 크기 조정
+                          children: sortedGames.map((userGame) {
+                            // 3. resultRank가 0이면 '액땜'으로 표시
+                            String rankText = userGame.resultRank == 0
+                                ? '액땜'
+                                : '${userGame.resultRank}등';
+
+                            return ListTile(
+                              subtitle: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '$rankText :',
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  Row(
+                                    children:
+                                        userGame.selectedDrwNos.map((number) {
+                                      // 5. winningNos에 있는 숫자에 대해 색상 및 텍스트 스타일 변경
+                                      bool isWinningNumber = userGame.winningNos
+                                              ?.contains(number) ??
+                                          false;
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4.0),
+                                        child: Container(
+                                          width: 38.0,
+                                          // 동그라미의 가로 크기
+                                          height: 38.0,
+                                          // 동그라미의 세로 크기
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                              color: primaryBlack, // 테두리 색상
+                                              width: 1.0, // 테두리 두께
+                                            ),
+                                            color: isWinningNumber
+                                                ? primaryYellow
+                                                : Colors.grey,
+                                          ),
+                                          alignment: Alignment.center,
+                                          // 텍스트 가운데 정렬
+                                          child: Text(
+                                            number.toString(),
+                                            style: TextStyle(
+                                              color: isWinningNumber
+                                                  ? Colors.black
+                                                  : Colors.white, // 글씨 색상
+                                              fontWeight: isWinningNumber
+                                                  ? FontWeight.bold
+                                                  : FontWeight.normal, // 글씨 굵기
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ],
                   ),
                 );
               },
@@ -211,40 +240,4 @@ int calculateTotalPrizeAmount(
   return totalPrize;
 }
 
-int calculateExperience(List<UserGame> userGames) {
-  int totalExperience = 0;
 
-  // 1. 각 게임에 대해 1점
-  totalExperience += userGames.length * 1;
-
-  // 2. 모든 userGame.matchingCount의 합 * 2점
-  totalExperience +=
-      userGames.fold(0, (sum, game) => sum + (game.matchingCount ?? 0)) * 2;
-
-  // 3. 게임 등수에 따라 점수 추가
-  for (UserGame game in userGames) {
-    if (game.resultRank != null) {
-      switch (game.resultRank) {
-        case 1:
-          totalExperience += 1000;
-          break;
-        case 2:
-          totalExperience += 500;
-          break;
-        case 3:
-          totalExperience += 200;
-          break;
-        case 4:
-          totalExperience += 50;
-          break;
-        case 5:
-          totalExperience += 10;
-          break;
-        default:
-          break; // 0 또는 기타 등급은 점수 없음
-      }
-    }
-  }
-
-  return totalExperience;
-}

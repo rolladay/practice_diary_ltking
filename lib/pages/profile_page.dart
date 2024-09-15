@@ -1,16 +1,21 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:kingoflotto/components/my_btn_container.dart';
 import 'package:kingoflotto/components/my_container.dart';
 import 'package:kingoflotto/components/my_sizedbox.dart';
 import 'package:kingoflotto/constants/fonts_constants.dart';
 import 'package:kingoflotto/features/isar_db/isar_service.dart';
+import 'package:kingoflotto/pages/setting_page.dart';
 import 'package:kingoflotto/pages/signin_page.dart';
 import '../components/ad_banner_widget.dart';
+import '../components/signiture_font.dart';
 import '../constants/color_constants.dart';
 import '../features/auth/auth_service.dart';
 import '../features/debug/cache_reset.dart';
+import '../features/lotto_service/lotto_functions.dart';
 import '../features/user_service/user_provider.dart';
+import '../models/user_model/user_model.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({super.key});
@@ -29,17 +34,60 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     final userModel = ref.watch(userModelNotifierProvider);
     final userModelClass = ref.watch(userModelNotifierProvider.notifier);
 
-    print('프로파일페이지 build함수 내 에서 refWatch로 가져온 값 : $userModel');
-
     void goToSignInPage() async {
       await Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const SignInPage()));
+    }
+
+    Widget buildTopNumbers(UserModel user) {
+      // coreNos에서 가장 빈도가 높은 6개의 번호 추출
+      final numberFrequency =
+          user.coreNos!.fold<Map<int, int>>({}, (map, number) {
+        map[number] = (map[number] ?? 0) + 1;
+        return map;
+      });
+
+      final topNumbers = numberFrequency.keys.toList() // 숫자만 추출하여 리스트로 변환
+        ..sort((a, b) =>
+            numberFrequency[b]!.compareTo(numberFrequency[a]!)) // 빈도순으로 정렬
+        ..take(6) // 상위 6개 숫자 선택
+            .toList();
+
+      print('넘버프리퀀시 : $numberFrequency');
+      print('넘버프리퀀시 엔트리 : ${numberFrequency.entries}');
+      print('coreNos: ${userModel!.coreNos}');
+      print('탑넘버: $topNumbers');
+
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: topNumbers.map((number) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.black, width: 1.5),
+              ),
+              child: CircleAvatar(
+                radius: 18,
+                backgroundColor: primaryYellow,
+                child: SignutureFont(
+                  title: number.toString(),
+                  textStyle: ballTextStyle,
+                  strokeTextStyle: ballTextStyleWithStroke,
+                ),
+              ),
+            ),
+          );
+        }).toList(),
+      );
     }
 
     return Scaffold(
       backgroundColor: backGroundColor,
       appBar: AppBar(
         backgroundColor: primaryOrange,
+        automaticallyImplyLeading: false,
         centerTitle: true,
         title: Column(
           children: [
@@ -63,9 +111,20 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           ],
         ),
         actions: [
-          Image.asset(
-            'assets/images/lotto_more.png',
-            width: 32,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) => const SettingPage(),
+                  transitionDuration: Duration.zero,  // 애니메이션 시간 0으로 설정
+                  reverseTransitionDuration: Duration.zero,  // 뒤로 갈 때도 애니메이션 없이
+                ),
+              );
+            },
+            child: Image.asset(
+              'assets/images/profile_setting.png',
+              width: 32,
+            ),
           ),
           const SizedBox(
             width: 16,
@@ -81,203 +140,218 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const MySizedBox(
-                height: 8,
-              ),
-              const AdBannerWidget(),
-              const MySizedBox(height: 8),
-              MyContainer(
-                  upperChild: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Row(
-                      children: [
-                        Text('Player License'),
-                        Spacer(),
-                        Text(
-                          'LV 01',
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                  ),
-                  bottomChild: Column(
-                    children: [
-                      const MySizedBox(height: 16),
-                      Container(
-                        width: 100.0, // 이미지의 너비
-                        height: 100.0, // 이미지의 높이
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Colors.black54, // 테두리 색상
-                            width: 1.5, // 테두리 두께
-                          ),
-                        ),
-                        child: ClipOval(
-                          child: Image.network(
-                            user?.photoURL ?? 'https://via.placeholder.com/150',
-                            // 기본 이미지 URL
-                            fit: BoxFit.cover,
-                            width: 100.0,
-                            height: 100.0,
-                          ),
-                        ),
-                      ),
-                      // 여기서 쓰이는 UserModel은 riverpod에서 가져오는 값이다. 앱 실행시 쭉 관리되는 상태임.
-                      // 즉, 로그인 후부터 로그인한 유저의 UserModel 의 state를 가지고 보여주는 부분으로
-                      // fireStore와 통신이나 서버간 통신이 없음.
-                      const MySizedBox(height: 8),
-                      Text(
-                        userModel?.displayName ?? 'No User',
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: primaryBlack),
-                      ),
-                      // 여기 유저 comment 들어갈 자리
-                      const Text(
-                        '난 앞으로도 열심히 살아갈꺼야.',
-                        style: TextStyle(color: Colors.black54, fontSize: 12),
-                      ),
-                      const MySizedBox(height: 8),
-
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Table(
-                            border: TableBorder.all(), // 테두리 추가
-                            columnWidths: const {
-                              0: FlexColumnWidth(3), // 첫 번째 열의 너비
-                              1: FlexColumnWidth(4),
-                              2: FlexColumnWidth(3),
-                              3: FlexColumnWidth(4),
-                            },
-                            defaultVerticalAlignment:
-                                TableCellVerticalAlignment.middle,
+        child: Column(
+          children: [
+            const MySizedBox(height: 8),
+            const AdBannerWidget(),
+            const MySizedBox(height: 8),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    MyContainer(
+                        upperChild: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Row(
                             children: [
-                              TableRow(
-                                children: [
-                                  const TableCell(
-                                    child: Padding(
-                                      padding: EdgeInsets.all(4.0),
-                                      child:
-                                          Text('총 게임수', style: tableTextStyle),
-                                    ),
-                                  ),
-                                  TableCell(
-                                      child: Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: Text(userModelClass
-                                              .getUserGames(userModel!.uid)
-                                              .toString()))),
-                                  const TableCell(
-                                      child: Padding(
-                                          padding: EdgeInsets.all(4.0),
-                                          child: Text('당첨 게임수',
-                                              style: tableTextStyle))),
-                                  TableCell(
-                                      child: Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: Text(userModel.email))),
-                                ],
-                              ),
-                              TableRow(
-                                children: [
-                                  const TableCell(
-                                      child: Padding(
-                                          padding: EdgeInsets.all(4.0),
-                                          child: Text('적중률',
-                                              style: tableTextStyle))),
-                                  TableCell(
-                                      child: Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: Text(userModel.winningRate
-                                              .toString()))),
-                                  const TableCell(
-                                      child: Padding(
-                                          padding: EdgeInsets.all(4.0),
-                                          child: Text('최고 성적',
-                                              style: tableTextStyle))),
-                                  TableCell(
-                                      child: Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child:
-                                              Text(userModel.rank.toString()))),
-                                ],
-                              ),
-                              TableRow(
-                                children: [
-                                  const TableCell(
-                                      child: Padding(
-                                          padding: EdgeInsets.all(4.0),
-                                          child: Text('총 지출',
-                                              style: tableTextStyle))),
-                                  TableCell(
-                                      child: Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: Text(userModel.totalSpend
-                                              .toString()))),
-                                  const TableCell(
-                                      child: Padding(
-                                          padding: EdgeInsets.all(4.0),
-                                          child: Text('총 상금',
-                                              style: tableTextStyle))),
-                                  TableCell(
-                                      child: Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: Text(userModel.totalPrize
-                                              .toString()))),
-                                ],
+                              Text('Player License'),
+                              Spacer(),
+                              Text(
+                                'Lv. 01',
+                                style: TextStyle(fontWeight: FontWeight.w600),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  bottomHeight: 600),
+                        bottomChild: Column(
+                          children: [
+                            const MySizedBox(height: 16),
+                            Container(
+                              width: 100.0, // 이미지의 너비
+                              height: 100.0, // 이미지의 높이
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.black54, // 테두리 색상
+                                  width: 1.5, // 테두리 두께
+                                ),
+                              ),
+                              child: ClipOval(
+                                child: CachedNetworkImage(
+                                  imageUrl: user?.photoURL ??
+                                      'https://via.placeholder.com/150',
+                                  fit: BoxFit.cover,
+                                  width: 100.0,
+                                  height: 100.0,
+                                  placeholder: (context, url) =>
+                                      const Icon(Icons.downloading),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                ),
+                              ),
+                            ),
+                            // 여기서 쓰이는 UserModel은 riverpod에서 가져오는 값이다. 앱 실행시 쭉 관리되는 상태임.
+                            // 즉, 로그인 후부터 로그인한 유저의 UserModel 의 state를 가지고 보여주는 부분으로
+                            // fireStore와 통신이나 서버간 통신이 없음.
+                            const MySizedBox(height: 8),
+                            Text(
+                              userModel!.displayName ?? 'No User',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryBlack),
+                            ),
+                            // 여기 유저 comment 들어갈 자리
+                            SizedBox(
+                              height: 32,
+                              width: 240,
+                              child: Center(
+                                child: Text(
+                                  userModel.userComment,
+                                  style: const TextStyle(
+                                      color: Colors.black54, fontSize: 12),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                              child: Container(
+                                height: 1,
+                                width: double.infinity,
+                                color: Colors.black45,
+                              ),
+                            ),
+                            const MySizedBox(height: 16),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    width: 92,
+                                    height: 54,
+                                    decoration: BoxDecoration(
+                                      color: primaryGrey,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        // 적중률 소숫점3자리까지만
+                                        Text(
+                                          '${userModel.winningRate != null ? userModel.winningRate!.toStringAsFixed(3) : "0.000"}%',
+                                          style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const Text(
+                                          '적중률',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.black54),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
 
-              // 이 부분은 LottoResult 최근꺼 확인할라고 있는 부분임... 나중에 없앨수도?
-              FutureBuilder(
-                future: isar.getLatestLottoResult(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator(); // 데이터를 로딩 중일 때 보여줄 위젯
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}'); // 에러 발생 시 보여줄 위젯
-                  } else if (snapshot.hasData) {
-                    return Text(snapshot.data!.drawDate
-                        .toString()); // 데이터가 존재할 때 보여줄 위젯
-                  } else {
-                    return const Text('No data'); // 데이터가 없을 때 보여줄 위젯
-                  }
-                },
-              ),
+                                  Container(
+                                    width: 92,
+                                    height: 54,
+                                    decoration: BoxDecoration(
+                                      color: primaryGrey,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          formatTotalPrize(
+                                              userModel.totalPrize),
+                                          style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const Text(
+                                          '총상금',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.black54),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  // 총경험치
+                                  Container(
+                                    width: 92,
+                                    height: 54,
+                                    decoration: BoxDecoration(
+                                      color: primaryGrey,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          '${userModel.exp != null ? userModel.exp!.toInt() : 0}',
+                                          style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const Text(
+                                          '경험치',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.black54),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const MySizedBox(height: 16),
+                            const Text(
+                              'Lucky Numbers',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const MySizedBox(height: 4),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: primaryGrey,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                width: double.infinity,
+                                height: 54,
+                                child: buildTopNumbers(userModel),
+                              ),
+                            ),
+                          ],
+                        ),
+                        bottomHeight: 376),
 
-              ElevatedButton(
-                child: const Text('로그아웃또'),
-                onPressed: () async {
-                  await auth.signOut();
-                  goToSignInPage();
-                  // 로그아웃 후 필요한 네비게이션 로직 (예: 로그인 페이지로 이동)
-                },
+                  ],
+                ),
               ),
-              ElevatedButton(
-                onPressed: () async {
-                  await deleteAppCache(); // 캐시 삭제 함수 호출
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('캐시가 삭제되었습니다.'),
-                    ),
-                  );
-                },
-                child: Text('캐시 삭제'),
+            ),
+            MyBtnContainer(
+              color: specialBlue,
+              child: const Center(
+                child: Text(
+                  '업그레이드',
+                  style: btnTextStyle,
+                ),
               ),
-            ],
-          ),
+            ),
+            const MySizedBox(height: 16),
+          ],
         ),
       ),
     );

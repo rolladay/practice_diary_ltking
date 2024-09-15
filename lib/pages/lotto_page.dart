@@ -13,6 +13,7 @@ import '../components/signiture_font3.dart';
 import '../constants/fonts_constants.dart';
 import '../features/lotto_service/lotto_result_manager.dart';
 import '../features/lotto_service/usergame_manager.dart';
+import '../features/user_service/user_provider.dart';
 
 class LottoPage extends ConsumerStatefulWidget {
   const LottoPage({super.key});
@@ -38,9 +39,12 @@ class _LottoPageState extends ConsumerState<LottoPage> {
   // checkLottoRank메소드 실행해서 rank 변수에 저장, winningNos 에 당첨번호 저장, matchingCount에 맞은갯수저장
   @override
   Widget build(BuildContext context) {
+    final userModelClass = ref.watch(userModelNotifierProvider.notifier);
+
     return Scaffold(
       backgroundColor: backGroundColor,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: primaryOrange,
         centerTitle: true,
         title: Column(
@@ -277,7 +281,7 @@ class _LottoPageState extends ConsumerState<LottoPage> {
                                     } else if (userGameSnapshot.hasError) {
                                       return Center(
                                           child: Text(
-                                              'Error: ${userGameSnapshot.error}'));
+                                              '퓨처 로드유저게임에서 Error: ${userGameSnapshot.error}'));
                                     } else if (userGameSnapshot.hasData) {
                                       // 해당 라운드에 해당하는 유저게임 리스트를 불러와서 userGames 에 저장
                                       // 이때 캐시에도 , 파베에도 해당라운드 게임리스트가 없으면 빈리스트 저장(뽑기안한경우)
@@ -314,8 +318,8 @@ class _LottoPageState extends ConsumerState<LottoPage> {
                                         // 만약 유저게임즈 리스트가 데이터가 있는 경우엔~ 또 퓨쳐빌더 들어가주고...
                                         // 이건 기존 userGames에 lottoResult를 적용, 업데이트 하는 것
                                         return FutureBuilder<void>(
-                                          future: updateUserGames(
-                                              userGames, lottoResult),
+                                          future: updateUserGames(userGames,
+                                              lottoResult, userModelClass),
 
                                           // 업데이트 비동기 처리
                                           builder: (context, snapshot) {
@@ -395,31 +399,25 @@ class _LottoPageState extends ConsumerState<LottoPage> {
                                                           ),
                                                     Expanded(
                                                       child: Container(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8),
-                                                        width: double.infinity,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                                color: const Color
-                                                                    .fromARGB(
-                                                                  255,
-                                                                  238,
-                                                                  238,
-                                                                  238,
-                                                                ),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            8)),
-                                                        child:
-                                                            // 밑에 박스에 회색영역으로 경험치 상금등 게임결과 및 상세정보버튼
-                                                            GameResultAnalysis(
-                                                                userGames:
-                                                                    userGames,
-                                                                lottoResult:
-                                                                    lottoResult)
-                                                      ),
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8),
+                                                          width:
+                                                              double.infinity,
+                                                          decoration: BoxDecoration(
+                                                              color:
+                                                                  primaryGrey,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8)),
+                                                          child:
+                                                              // 밑에 박스에 회색영역으로 경험치 상금등 게임결과 및 상세정보버튼
+                                                              GameResultAnalysis(
+                                                                  userGames:
+                                                                      userGames,
+                                                                  lottoResult:
+                                                                      lottoResult)),
                                                     ),
                                                   ],
                                                 ),

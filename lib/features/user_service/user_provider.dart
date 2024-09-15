@@ -1,7 +1,9 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../models/lotto_result_model/lotto_result.dart';
 import '../../models/user_game_model/user_game.dart';
 import '../../models/user_model/user_model.dart';
+import '../lotto_service/lotto_functions.dart';
 
 part 'user_provider.g.dart';
 
@@ -34,6 +36,59 @@ class UserModelNotifier extends _$UserModelNotifier {
       print('파이어스토어에 데이터 저장 중 오류 발생: $e');
     }
   }
+
+
+  Future<void> updateUserStats({
+    required int totalGamesUpdated,
+    required int totalMatchingCount,
+    required List<UserGame> userGames,
+    required LottoResult lottoResult,
+  }) async {
+    final userId = userGames.first.playerUid;
+
+    final user = await fetchUser(userId);
+    if (user == null) return;
+
+    // 적중률 계산
+    double newGameWinningRate = (totalMatchingCount / (totalGamesUpdated * 6)) * 100;
+    double updatedWinningRate = ((user.winningRate ?? 0.0) * user.totalSpend / 1000 +
+        newGameWinningRate * totalGamesUpdated) /
+        (user.totalSpend / 1000 + totalGamesUpdated);
+
+    // 경험치 계산
+    int newExperience = calculateExperience(userGames);
+    double updatedExperience = (user.exp ?? 0) + newExperience;
+
+    // 총 상금 계산
+    int newTotalPrize = calculateTotalPrizeAmount(userGames, lottoResult);
+    double updatedTotalPrize = (user.totalPrize ?? 0) + newTotalPrize;
+
+    // 총 게임 수 및 지출 계산
+    double updatedTotalGames = (user.totalSpend/1000 ?? 0) + totalGamesUpdated;
+    double updatedTotalSpends = updatedTotalGames * 1000;
+
+
+    // 당첨번호를 유저의 coreNos에 모두 추가하는 과정
+    List<int> updatedCoreNos = List<int>.from(user.coreNos ?? []);
+    for (var game in userGames) {
+      updatedCoreNos.addAll(game.winningNos as Iterable<int>);
+    }
+
+
+    // 업데이트된 유저 정보 객체
+    final updatedUser = user.copyWith(
+      winningRate: updatedWinningRate,
+      exp: updatedExperience,
+      totalPrize: updatedTotalPrize,
+      totalSpend: updatedTotalSpends,
+      coreNos: updatedCoreNos,
+    );
+
+    // Firestore 및 상태 업데이트
+    await updateUser(updatedUser);
+  }
+
+
 
 
   // user Collection에서 데이터를 가져와 User 객체 생성 및 상태 업데이트
@@ -102,9 +157,4 @@ class UserModelNotifier extends _$UserModelNotifier {
       return [];
     }
   }
-
-
-
-
-
 }

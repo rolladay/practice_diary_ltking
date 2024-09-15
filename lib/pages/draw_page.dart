@@ -21,9 +21,6 @@ class DrawPage extends ConsumerStatefulWidget {
   ConsumerState<DrawPage> createState() => _DrawPageState();
 }
 
-
-
-
 class _DrawPageState extends ConsumerState<DrawPage> {
   // 다음로또회차(+1) 하기위한 현재(결과가 나온) 로또리절트 객체
   LottoResult? _nextLottoResult;
@@ -31,7 +28,6 @@ class _DrawPageState extends ConsumerState<DrawPage> {
 
   bool _isLoading = true; // 로딩 상태를 추적하는 변수
   String? _errorMessage; // 에러 메시지를 저장하는 변수
-
 
   @override
   void initState() {
@@ -69,13 +65,13 @@ class _DrawPageState extends ConsumerState<DrawPage> {
     }
   }
 
-
   // 언제 userGames가 캐시에 저장되는 지 체크해두자.
   // cachedUserGames 에 캐시에 있던 유저게임리스트 불러와서 저장
   Future<void> _loadCachedUserGames() async {
     if (_nextLottoResult != null) {
-      final userGames = await loadUserGames(ref, _nextLottoResult!.roundNumber+1);
-      print('드로우페이제에서의 roundNo+1 = ${_nextLottoResult!.roundNumber+1}');
+      final userGames =
+          await loadUserGames(ref, _nextLottoResult!.roundNumber + 1);
+      print('드로우페이제에서의 roundNo+1 = ${_nextLottoResult!.roundNumber + 1}');
       setState(() {
         loadedUserGames = userGames;
       });
@@ -114,6 +110,7 @@ class _DrawPageState extends ConsumerState<DrawPage> {
     return Scaffold(
       backgroundColor: backGroundColor,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: primaryOrange,
         centerTitle: true,
         title: Column(
@@ -128,7 +125,7 @@ class _DrawPageState extends ConsumerState<DrawPage> {
           ],
         ),
         actions: [
-          Image.asset('assets/images/lotto_more.png', width: 32),
+          Image.asset('assets/images/draw_camera.png', width: 32),
           const SizedBox(width: 16)
         ],
         bottom: PreferredSize(
@@ -140,7 +137,7 @@ class _DrawPageState extends ConsumerState<DrawPage> {
         ),
       ),
       body: _isLoading
-          ? const Text('')// 로딩 인디케이터 표시
+          ? const Text('') // 로딩 인디케이터 표시
           : _errorMessage != null
               ? Center(child: Text(_errorMessage!)) // 에러 메시지 표시
               : Column(
@@ -163,6 +160,8 @@ class _DrawPageState extends ConsumerState<DrawPage> {
                                   const Spacer(),
                                   Text(
                                     '추첨일 : ${_nextLottoResult!.nextWeekDrawDate}',
+                                    style: const TextStyle(
+                                        fontSize: 12, color: Colors.grey),
                                   ),
                                 ],
                               ),
@@ -203,11 +202,11 @@ class _DrawPageState extends ConsumerState<DrawPage> {
                                           MainAxisAlignment.spaceEvenly,
                                       children: sortedNumbers.map((number) {
                                         return CircleAvatar(
-                                          radius: 18,
+                                          radius: 16,
                                           backgroundColor: Colors.grey,
                                           child: Text(
                                             number.toString(),
-                                            style: ballTextStyle,
+                                            style: ballTextStyleDrawPage,
                                           ),
                                         );
                                       }).toList(),
@@ -224,7 +223,26 @@ class _DrawPageState extends ConsumerState<DrawPage> {
         padding: const EdgeInsets.all(16.0),
         child: InkWell(
           onTap: isMaxGamesReached
-              ? null // 최대 게임 수에 도달하면 아무 작업도 하지 않음
+              ? () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text(
+                          '회차별 5게임 초과 도전은 업그레이드를 통해 가능하며, 업그레이드 시 알찬 혜택이 주렁주렁 딸려옵니다'),
+                      duration: const Duration(seconds: 3),
+                      action: SnackBarAction(
+                        label: '확인',
+                        onPressed: () {
+                          // 액션 버튼을 눌렀을 때의 동작
+                        },
+                      ),
+                      backgroundColor: Colors.black87,
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  );
+                }
               : () async {
                   if (_nextLottoResult != null && user != null) {
                     final UserGame? newGame = await showDialog<UserGame>(
@@ -233,15 +251,17 @@ class _DrawPageState extends ConsumerState<DrawPage> {
                         // **** 라운드넘버에서 1빼고 저장하면 이전꺼 생긴다 디버그 ****
                         return NumberSelectionScreen(
                           playerUid: user.uid,
-                          roundNo: _nextLottoResult!.roundNumber +1,
+                          roundNo: _nextLottoResult!.roundNumber + 1,
                         );
                       },
                     );
 
                     if (newGame != null) {
                       setState(() {
+                        // 캐시에 있던 게임리스트 불러와서 추가
                         loadedUserGames.add(newGame);
                       });
+                      // 그리고 다시 캐시에 추가
                       await _saveGamesToCache(loadedUserGames);
                     }
                   } else {

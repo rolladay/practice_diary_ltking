@@ -7,3 +7,4 @@ Color specialBlue = const Color.fromARGB(255, 61, 59, 175);
 
 Color primaryBlack = const Color.fromARGB(255, 20, 20, 20);
 Color backGroundColor = const Color.fromARGB(255, 240, 240, 240);
+Color primaryGrey = const Color.fromARGB(255, 238, 238, 238);

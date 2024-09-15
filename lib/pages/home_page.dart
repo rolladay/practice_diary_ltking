@@ -2,16 +2,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kingoflotto/pages/profile_page.dart';
 import 'package:kingoflotto/pages/rank_page.dart';
 import 'package:kingoflotto/pages/draw_page.dart';
 import '../constants/color_constants.dart';
 import '../constants/my_bnb_list.dart';
-import '../features/auth/auth_service.dart';
-import '../features/user_service/user_provider.dart';
 import 'lotto_page.dart';
-import 'lotto_page_test.dart';
+
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -38,13 +35,23 @@ class _HomePageState extends ConsumerState<HomePage> {
     if (currentBackPressTime == null ||
         now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
       currentBackPressTime = now;
-      Fluttertoast.showToast(
-        msg: "Press back again to exit.",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.black54,
-        textColor: Colors.white,
-        fontSize: 16.0,
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text(
+              '뒤로가기 버튼을 한번 더 누르면 앱이 종료됩니다'),
+          duration: const Duration(seconds: 2),
+          action: SnackBarAction(
+            label: '확인',
+            onPressed: () {
+              // 액션 버튼을 눌렀을 때의 동작
+            },
+          ),
+          backgroundColor: Colors.black87,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
       );
     } else {
       _exitApp();

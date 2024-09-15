@@ -49,6 +49,8 @@ class AuthService extends _$AuthService {
             totalPrize: 0,
             exp: 0,
             maxGames: 5,
+            userComment: 'user comment here',
+            coreNos: [],
           );
 
           // newUser 객체를 json형태로 저장하는 부분

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kingoflotto/constants/color_constants.dart';
@@ -7,7 +5,6 @@ import 'package:kingoflotto/constants/color_constants.dart';
 final TextStyle appBarTitleTextStyle = GoogleFonts.blackHanSans(
   fontSize: 22,
   color: Colors.white,
-
 );
 
 final TextStyle appBarTitleTextStyleWithStroke = GoogleFonts.blackHanSans(
@@ -19,9 +16,13 @@ final TextStyle appBarTitleTextStyleWithStroke = GoogleFonts.blackHanSans(
     ..color = Colors.black, // 스트로크 색상
 );
 
-
 final TextStyle ballTextStyle = GoogleFonts.blackHanSans(
   fontSize: 21,
+  color: Colors.white,
+);
+
+final TextStyle ballTextStyleDrawPage = GoogleFonts.blackHanSans(
+  fontSize: 20,
   color: Colors.white,
 );
 
@@ -34,11 +35,9 @@ final TextStyle ballTextStyleWithStroke = GoogleFonts.blackHanSans(
     ..color = Colors.black, // 스트로크 색상
 );
 
-
 final TextStyle bigTextStyle = GoogleFonts.blackHanSans(
   fontSize: 32,
   color: primaryYellow,
-
 );
 
 final TextStyle bigTextStyleWithStroke = GoogleFonts.blackHanSans(
@@ -50,11 +49,9 @@ final TextStyle bigTextStyleWithStroke = GoogleFonts.blackHanSans(
     ..color = Colors.black, // 스트로크 색상
 );
 
-
 final TextStyle bigTextStyle2 = GoogleFonts.blackHanSans(
   fontSize: 72,
   color: primaryYellow,
-
 );
 
 final TextStyle bigTextStyleWithStroke2 = GoogleFonts.blackHanSans(
@@ -66,5 +63,16 @@ final TextStyle bigTextStyleWithStroke2 = GoogleFonts.blackHanSans(
     ..color = Colors.black, // 스트로크 색상
 );
 
-
 const TextStyle tableTextStyle = TextStyle(fontSize: 12);
+
+const TextStyle btnTextStyle = TextStyle(
+  color: Colors.white,
+  fontSize: 16,
+  fontWeight: FontWeight.w600,
+);
+
+TextStyle settingTitleTextStyle = TextStyle(
+  color: primaryBlack,
+  fontSize: 16,
+  fontWeight: FontWeight.w600,
+);

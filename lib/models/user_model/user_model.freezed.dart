@@ -33,7 +33,9 @@ mixin _$UserModel {
   double? get winningRate => throw _privateConstructorUsedError;
   int? get rank => throw _privateConstructorUsedError;
   double? get exp => throw _privateConstructorUsedError;
+  List<int>? get coreNos => throw _privateConstructorUsedError;
   int get maxGames => throw _privateConstructorUsedError;
+  String get userComment => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -58,7 +60,9 @@ abstract class $UserModelCopyWith<$Res> {
       double? winningRate,
       int? rank,
       double? exp,
-      int maxGames});
+      List<int>? coreNos,
+      int maxGames,
+      String userComment});
 }
 
 /// @nodoc
@@ -85,7 +89,9 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? winningRate = freezed,
     Object? rank = freezed,
     Object? exp = freezed,
+    Object? coreNos = freezed,
     Object? maxGames = null,
+    Object? userComment = null,
   }) {
     return _then(_value.copyWith(
       uid: null == uid
@@ -132,10 +138,18 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.exp
           : exp // ignore: cast_nullable_to_non_nullable
               as double?,
+      coreNos: freezed == coreNos
+          ? _value.coreNos
+          : coreNos // ignore: cast_nullable_to_non_nullable
+              as List<int>?,
       maxGames: null == maxGames
           ? _value.maxGames
           : maxGames // ignore: cast_nullable_to_non_nullable
               as int,
+      userComment: null == userComment
+          ? _value.userComment
+          : userComment // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -159,7 +173,9 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserModelCopyWith<$Res> {
       double? winningRate,
       int? rank,
       double? exp,
-      int maxGames});
+      List<int>? coreNos,
+      int maxGames,
+      String userComment});
 }
 
 /// @nodoc
@@ -183,7 +199,9 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? winningRate = freezed,
     Object? rank = freezed,
     Object? exp = freezed,
+    Object? coreNos = freezed,
     Object? maxGames = null,
+    Object? userComment = null,
   }) {
     return _then(_$UserImpl(
       uid: null == uid
@@ -230,10 +248,18 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value.exp
           : exp // ignore: cast_nullable_to_non_nullable
               as double?,
+      coreNos: freezed == coreNos
+          ? _value._coreNos
+          : coreNos // ignore: cast_nullable_to_non_nullable
+              as List<int>?,
       maxGames: null == maxGames
           ? _value.maxGames
           : maxGames // ignore: cast_nullable_to_non_nullable
               as int,
+      userComment: null == userComment
+          ? _value.userComment
+          : userComment // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -253,7 +279,10 @@ class _$UserImpl implements _User {
       this.winningRate,
       this.rank,
       this.exp,
-      this.maxGames = 5});
+      final List<int>? coreNos,
+      this.maxGames = 5,
+      this.userComment = 'your comment'})
+      : _coreNos = coreNos;
 
   factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserImplFromJson(json);
@@ -282,13 +311,26 @@ class _$UserImpl implements _User {
   final int? rank;
   @override
   final double? exp;
+  final List<int>? _coreNos;
+  @override
+  List<int>? get coreNos {
+    final value = _coreNos;
+    if (value == null) return null;
+    if (_coreNos is EqualUnmodifiableListView) return _coreNos;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   @JsonKey()
   final int maxGames;
+  @override
+  @JsonKey()
+  final String userComment;
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid, displayName: $displayName, photoUrl: $photoUrl, createdTime: $createdTime, lastSignedIn: $lastSignedIn, totalSpend: $totalSpend, totalPrize: $totalPrize, email: $email, winningRate: $winningRate, rank: $rank, exp: $exp, maxGames: $maxGames)';
+    return 'UserModel(uid: $uid, displayName: $displayName, photoUrl: $photoUrl, createdTime: $createdTime, lastSignedIn: $lastSignedIn, totalSpend: $totalSpend, totalPrize: $totalPrize, email: $email, winningRate: $winningRate, rank: $rank, exp: $exp, coreNos: $coreNos, maxGames: $maxGames, userComment: $userComment)';
   }
 
   @override
@@ -314,8 +356,11 @@ class _$UserImpl implements _User {
                 other.winningRate == winningRate) &&
             (identical(other.rank, rank) || other.rank == rank) &&
             (identical(other.exp, exp) || other.exp == exp) &&
+            const DeepCollectionEquality().equals(other._coreNos, _coreNos) &&
             (identical(other.maxGames, maxGames) ||
-                other.maxGames == maxGames));
+                other.maxGames == maxGames) &&
+            (identical(other.userComment, userComment) ||
+                other.userComment == userComment));
   }
 
   @JsonKey(ignore: true)
@@ -333,7 +378,9 @@ class _$UserImpl implements _User {
       winningRate,
       rank,
       exp,
-      maxGames);
+      const DeepCollectionEquality().hash(_coreNos),
+      maxGames,
+      userComment);
 
   @JsonKey(ignore: true)
   @override
@@ -362,7 +409,9 @@ abstract class _User implements UserModel {
       final double? winningRate,
       final int? rank,
       final double? exp,
-      final int maxGames}) = _$UserImpl;
+      final List<int>? coreNos,
+      final int maxGames,
+      final String userComment}) = _$UserImpl;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
 
@@ -391,7 +440,11 @@ abstract class _User implements UserModel {
   @override
   double? get exp;
   @override
+  List<int>? get coreNos;
+  @override
   int get maxGames;
+  @override
+  String get userComment;
   @override
   @JsonKey(ignore: true)
   _$$UserImplCopyWith<_$UserImpl> get copyWith =>

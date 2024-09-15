@@ -18,7 +18,9 @@ class UserModel with _$UserModel {
     double? winningRate,
     int? rank,
     double? exp,
+    List<int>? coreNos,
     @Default(5) int maxGames,
+    @Default('your comment') String userComment,
   }) = _User;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);

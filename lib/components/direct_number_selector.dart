@@ -1,10 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kingoflotto/components/my_btn_container.dart';
 import 'package:kingoflotto/components/signiture_font.dart';
@@ -66,7 +63,7 @@ class NumberSelectionScreenState extends ConsumerState<NumberSelectionScreen> {
       return;
     }
 
-    autoSelectTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+    autoSelectTimer = Timer.periodic(const Duration(milliseconds: 250), (timer) {
       if (selectedNos.length >= 6) {
         timer.cancel();
         setState(() {
@@ -244,11 +241,16 @@ class NumberSelectionScreenState extends ConsumerState<NumberSelectionScreen> {
                       bool isSelected = selectedNos.contains(number);
                       return GestureDetector(
                         onTap: isGenerating ? null : () => toggleNumberSelection(number),
-                        child: CircleAvatar(
-                          backgroundColor: isSelected ? specialBlue : Colors.grey,
-                          child: Text(
-                            '$number',
-                            style: const TextStyle(color: Colors.white, fontSize: 14),
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: double.infinity,
+                          height: double.infinity,
+                          child: CircleAvatar(
+                            backgroundColor: isSelected ? specialBlue : Colors.grey,
+                            child: Text(
+                              '$number',
+                              style: const TextStyle(color: Colors.white, fontSize: 14),
+                            ),
                           ),
                         ),
                       );
