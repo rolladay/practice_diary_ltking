@@ -17,12 +17,13 @@ _$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
       totalSpend: (json['totalSpend'] as num).toDouble(),
       totalPrize: (json['totalPrize'] as num).toDouble(),
       email: json['email'] as String,
-      winningRate: (json['winningRate'] as num?)?.toDouble(),
-      rank: (json['rank'] as num?)?.toInt(),
-      exp: (json['exp'] as num?)?.toDouble(),
       coreNos: (json['coreNos'] as List<dynamic>?)
           ?.map((e) => (e as num).toInt())
           .toList(),
+      exp: (json['exp'] as num?)?.toDouble() ?? 0,
+      winningRate: (json['winningRate'] as num?)?.toDouble() ?? 0,
+      wonGames: (json['wonGames'] as num?)?.toInt() ?? 0,
+      rank: (json['rank'] as num?)?.toInt() ?? 1,
       maxGames: (json['maxGames'] as num?)?.toInt() ?? 5,
       userComment: json['userComment'] as String? ?? 'your comment',
     );
@@ -37,10 +38,11 @@ Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
       'totalSpend': instance.totalSpend,
       'totalPrize': instance.totalPrize,
       'email': instance.email,
-      'winningRate': instance.winningRate,
-      'rank': instance.rank,
-      'exp': instance.exp,
       'coreNos': instance.coreNos,
+      'exp': instance.exp,
+      'winningRate': instance.winningRate,
+      'wonGames': instance.wonGames,
+      'rank': instance.rank,
       'maxGames': instance.maxGames,
       'userComment': instance.userComment,
     };

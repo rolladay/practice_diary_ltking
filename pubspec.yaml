@@ -38,6 +38,11 @@ dependencies:
   firebase_crashlytics: ^4.0.4
   intl: ^0.19.0
   cached_network_image: ^3.4.1
+  image_picker: ^1.1.2
+  google_mlkit_text_recognition: ^0.13.1
+  flip_card: ^0.7.0
+  in_app_purchase: ^3.2.0
+
 
 
 
@@ -53,9 +58,6 @@ dev_dependencies:
   json_serializable: ^6.8.0
   isar_generator: any
   analyzer: ^5.13.0
-
-
-
 
 
 

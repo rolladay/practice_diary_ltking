@@ -1,5 +1,11 @@
+import 'package:flutter/material.dart';
+
+import '../../components/signiture_font.dart';
+import '../../constants/color_constants.dart';
+import '../../constants/fonts_constants.dart';
 import '../../models/lotto_result_model/lotto_result.dart';
 import '../../models/user_game_model/user_game.dart';
+import '../../models/user_model/user_model.dart';
 
 int calculatePrizeAmount(UserGame userGame, LottoResult lottoResult) {
   switch (userGame.resultRank) {
@@ -53,6 +59,7 @@ int checkLottoRank(
 }
 
 
+// 꾸타이 경험치 추가될때 이상한게 있는데 이 함수에서는 문제가 없음
 int calculateExperience(List<UserGame> userGames) {
   int totalExperience = 0;
 
@@ -120,5 +127,77 @@ String formatTotalPrize(dynamic totalPrize) {
     }
   } else {
     return '0원';
+  }
+}
+
+
+Widget buildTopNumbers(UserModel user) {
+  // coreNos에서 가장 빈도가 높은 6개의 번호 추출
+  final numberFrequency =
+  user.coreNos!.fold<Map<int, int>>({}, (map, number) {
+    map[number] = (map[number] ?? 0) + 1;
+    return map;
+  });
+
+  final topNumbers = numberFrequency.keys.toList()
+    ..sort((a, b) => numberFrequency[b]! == numberFrequency[a]!
+        ? a.compareTo(b)
+        : numberFrequency[b]!.compareTo(numberFrequency[a]!));
+  final top6Numbers = topNumbers.take(6).toList();
+
+  print('넘버프리퀀시 : $numberFrequency');
+  print('넘버프리퀀시 엔트리 : ${numberFrequency.entries}');
+  print('coreNos: ${user.coreNos}');
+  print('탑넘버: $top6Numbers');
+
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: top6Numbers.map((number) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.black, width: 1.5),
+          ),
+          child: CircleAvatar(
+            radius: 18,
+            backgroundColor: primaryYellow,
+            child: SignutureFont(
+              title: number.toString(),
+              textStyle: ballTextStyle,
+              strokeTextStyle: ballTextStyleWithStroke,
+            ),
+          ),
+        ),
+      );
+    }).toList(),
+  );
+}
+
+
+int calculateRank(double experience) {
+  if (experience < 25) return 1;
+  if (experience < 100) return 2;
+  if (experience < 250) return 3;
+  if (experience < 1000) return 4;
+  if (experience < 9999) return 5;
+  return 5; // 1000 이상일 경우도 5로 설정
+}
+
+int calculateMaxGames(int rank) {
+  switch (rank) {
+    case 1:
+      return 5;
+    case 2:
+      return 10;
+    case 3:
+      return 25;
+    case 4:
+      return 50;
+    case 5:
+      return 100;
+    default:
+      return 5; // 기본값
   }
 }

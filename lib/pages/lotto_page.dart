@@ -24,15 +24,15 @@ class LottoPage extends ConsumerStatefulWidget {
 
 class _LottoPageState extends ConsumerState<LottoPage> {
   // 로또리절트 퓨쳐를 반환 및 저장 - isarDB에 저장되는 객체 (차례차례 저장됨)
-  late Future<LottoResult> _futureLottoResult;
-  late Future<List<UserGame>> _futureUserGames;
+  late Future<LottoResult> recentLottoResult;
+  // late Future<List<UserGame>> _futureUserGames;
 
   // 처음 화면 그릴때 광고로드하고, 퓨처<로또리절트> 를 _futureLottoResult 변수에 저장해둠
   @override
   void initState() {
     super.initState();
     // 패치해서 로또리절트 보여주든, isar 라스트리절트 보여주든 캐시저장된 로또리절트 보여주든 LottoResult객체 반환
-    _futureLottoResult = getCachedOrFetchLottoResult();
+    recentLottoResult = getCachedOrFetchLottoResult();
   }
 
   // userGames 와 LottoResult 객체를 받아서 각 UserGame 객체가 ResultRank가 널인경우
@@ -58,10 +58,10 @@ class _LottoPageState extends ConsumerState<LottoPage> {
             ),
           ],
         ),
-        actions: [
-          Image.asset('assets/images/lotto_more.png', width: 32),
-          const SizedBox(width: 16),
-        ],
+        // actions: [
+        //   Image.asset('assets/images/lotto_more.png', width: 32),
+        //   const SizedBox(width: 16),
+        // ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
           child: Container(color: Colors.black, height: 1.0),
@@ -83,8 +83,8 @@ class _LottoPageState extends ConsumerState<LottoPage> {
                 children: [
                   Center(
                     child: FutureBuilder<LottoResult>(
-                      // 지난 로또 결과가 이 변수에 저장되어있다.
-                      future: _futureLottoResult,
+                      // 지난 로또 결과(LottoResult 객체)가 이 변수에 저장되어있다.
+                      future: recentLottoResult,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -96,7 +96,7 @@ class _LottoPageState extends ConsumerState<LottoPage> {
                               upperChild: const Row(
                                 children: [
                                   SizedBox(width: 8),
-                                  Text('Loading..'),
+                                  Text(''),
                                   Spacer(),
                                 ],
                               ),
@@ -107,13 +107,16 @@ class _LottoPageState extends ConsumerState<LottoPage> {
                                 ),
                               ),
                               bottomHeight: 200,
+                              upperChildColor: secondOrange,
                             ),
                           );
                         } else if (snapshot.hasError) {
                           return Center(
                               child: Text('Error: ${snapshot.error}'));
 
+
                           // 여기가 이제 FutureLottoResult 에 데이터 들어오면 실행되는 부분
+                          // getCachedOrFechedLottoResult()의 반환값, LottoResult모델
                         } else if (snapshot.hasData) {
                           final lottoResult = snapshot.data!;
 
@@ -129,6 +132,7 @@ class _LottoPageState extends ConsumerState<LottoPage> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 16.0),
                                 child: MyContainer(
+                                  upperChildColor: secondOrange,
                                   upperChild: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8.0),
@@ -270,7 +274,7 @@ class _LottoPageState extends ConsumerState<LottoPage> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 16.0),
                                 child: FutureBuilder<List<UserGame>>(
-                                  // 해당 라운드의 유저게임즈(캐시에 저장되어있는) '유저게임 리스트'를 불러온다.
+                                  // 해당 라운드의 유저게임즈(캐시에 저장되어있는, 없으면 파베에서) '유저게임 리스트'를 불러온다.
                                   future: loadUserGames(
                                       ref, lottoResult.roundNumber),
                                   // 사용자 게임 데이터 로드
@@ -318,6 +322,8 @@ class _LottoPageState extends ConsumerState<LottoPage> {
                                         // 만약 유저게임즈 리스트가 데이터가 있는 경우엔~ 또 퓨쳐빌더 들어가주고...
                                         // 이건 기존 userGames에 lottoResult를 적용, 업데이트 하는 것
                                         return FutureBuilder<void>(
+                                          // 유저의 해당 라운드 게임리스트를 rank winningNos 등 업데이트한다.
+                                          // 그리고 해당 결과를 updateUserGames 하면서 동시에 User모델에도 업뎃쳐준다.
                                           future: updateUserGames(userGames,
                                               lottoResult, userModelClass),
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../constants/color_constants.dart';
 
 class MySettingList extends StatelessWidget {
   const MySettingList({

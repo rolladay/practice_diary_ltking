@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user_model.freezed.dart';
+
 part 'user_model.g.dart';
 
 @freezed
@@ -15,18 +16,19 @@ class UserModel with _$UserModel {
     required double totalSpend,
     required double totalPrize,
     required String email,
-    double? winningRate,
-    int? rank,
-    double? exp,
+
     List<int>? coreNos,
+    @Default(0) double exp,
+    @Default(0) double winningRate,
+    @Default(0) int wonGames,
+    @Default(1) int rank,
     @Default(5) int maxGames,
     @Default('your comment') String userComment,
   }) = _User;
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
 }
-
-
 
 class TimestampConverter implements JsonConverter<DateTime, Timestamp> {
   const TimestampConverter();

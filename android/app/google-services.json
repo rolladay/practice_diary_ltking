@@ -12,7 +12,28 @@
           "package_name": "com.lotto.king"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "576261762950-8ktlrcfr4gsqr8p2aavmtmic67pfgivr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lotto.king",
+            "certificate_hash": "7fa876c8924b6338fd0ed0682977feda721f47ca"
+          }
+        },
+        {
+          "client_id": "576261762950-cp17d2u6n9t6vickos7b6jfer6mc89ac.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lotto.king",
+            "certificate_hash": "530dda94a817749beec5fdb9b9841f99e0fe9f8e"
+          }
+        },
+        {
+          "client_id": "576261762950-q9s5nndka9658m5f6culmispqlu0rf9m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBG-cNs02_qwA07sZgEKfAwlFAgSEIo6A0"
@@ -20,7 +41,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "576261762950-q9s5nndka9658m5f6culmispqlu0rf9m.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "576261762950-v2d0b0al9khedsc73j10bsfhmfph7sh4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.kingoflotto"
+              }
+            }
+          ]
         }
       }
     }

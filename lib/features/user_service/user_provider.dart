@@ -7,7 +7,6 @@ import '../lotto_service/lotto_functions.dart';
 
 part 'user_provider.g.dart';
 
-
 // user 객체를 업데이트 할 때 사용하는데, auth랑 구분해서 사용하면 될듯
 // 초기값은 null이지만, 이 후 state는 UserModel 객체이며, Notifier는 이 메소드 접근가능한 class의미
 
@@ -27,9 +26,6 @@ class UserModelNotifier extends _$UserModelNotifier {
           .collection('users')
           .doc(updatedUser.uid)
           .update(data);
-
-      print('파이어스토어에 저장될 데이터는 ? : $data'); // Firestore에 저장되는 데이터를 확인
-
       // Firestore에 저장된 후, 상태 업데이트
       state = updatedUser;
     } catch (e) {
@@ -38,6 +34,69 @@ class UserModelNotifier extends _$UserModelNotifier {
   }
 
 
+  //**** 이게 원래 있던 업데이트 유저 스탯... 이 아래 1003 새로운(rnak업뎃) 함수 시험적으로 넣어봄 ****
+
+//   Future<void> updateUserStats({
+//     required int totalGamesUpdated,
+//     required int totalMatchingCount,
+//     required List<UserGame> userGames,
+//     required LottoResult lottoResult,
+//   }) async {
+//     final userId = userGames.first.playerUid;
+//
+//     final user = await fetchUser(userId);
+//     if (user == null) return;
+//
+//     // 적중률 계산
+//     double newGameWinningRate =
+//         (totalMatchingCount / (totalGamesUpdated * 6)) * 100;
+//     double updatedWinningRate =
+//         ((user.winningRate ?? 0.0) * user.totalSpend / 1000 +
+//                 newGameWinningRate * totalGamesUpdated) /
+//             (user.totalSpend / 1000 + totalGamesUpdated);
+//
+//     // 경험치 계산
+//     int newExperience = calculateExperience(userGames);
+//     double updatedExperience = (user.exp ?? 0) + newExperience;
+//
+//     // 총 상금 계산
+//     int newTotalPrize = calculateTotalPrizeAmount(userGames, lottoResult);
+//     double updatedTotalPrize = (user.totalPrize) + newTotalPrize;
+//
+//     // 총 게임 수 및 지출 계산
+//     double updatedTotalGames = (user.totalSpend / 1000) + totalGamesUpdated;
+//     double updatedTotalSpends = updatedTotalGames * 1000;
+//
+//     // 당첨번호를 유저의 coreNos에 모두 추가하는 과정
+//     List<int> updatedCoreNos = List<int>.from(user.coreNos ?? []);
+//     for (var game in userGames) {
+//       updatedCoreNos.addAll(game.winningNos as Iterable<int>);
+//     }
+//
+// // 여기서부터 0928 실험
+//     int newWonGames = userGames.where((game) => game.matchingCount! >= 3).length;
+//     int updatedWonGames = (user.wonGames) + newWonGames;
+// // 여기서부터 0928 실험
+//
+//     // 업데이트된 유저 정보 객체
+//     final updatedUser = user.copyWith(
+//       winningRate: updatedWinningRate,
+//       exp: updatedExperience,
+//       totalPrize: updatedTotalPrize,
+//       totalSpend: updatedTotalSpends,
+//       coreNos: updatedCoreNos,
+//       wonGames: updatedWonGames,
+//     );
+//     // Firestore 및 상태 업데이트
+//
+//     // 0928 실험하면서 아래 주석처리
+//     // await updateWonGames(updatedUser.uid);
+//     await updateUser(updatedUser);
+//   }
+
+
+  // 여기사 1003 새로운 업데이트유저스탯 함수 (랭크업데이트용)
+  // 업데이트 유저스탯 함수는 rank가 없는 게임이 있을때만
   Future<void> updateUserStats({
     required int totalGamesUpdated,
     required int totalMatchingCount,
@@ -45,28 +104,30 @@ class UserModelNotifier extends _$UserModelNotifier {
     required LottoResult lottoResult,
   }) async {
     final userId = userGames.first.playerUid;
-
     final user = await fetchUser(userId);
     if (user == null) return;
 
     // 적중률 계산
     double newGameWinningRate = (totalMatchingCount / (totalGamesUpdated * 6)) * 100;
-    double updatedWinningRate = ((user.winningRate ?? 0.0) * user.totalSpend / 1000 +
-        newGameWinningRate * totalGamesUpdated) /
-        (user.totalSpend / 1000 + totalGamesUpdated);
+    double updatedWinningRate = ((user.winningRate ?? 0.0) * user.totalSpend / 1000 + newGameWinningRate * totalGamesUpdated) / (user.totalSpend / 1000 + totalGamesUpdated);
 
     // 경험치 계산
     int newExperience = calculateExperience(userGames);
     double updatedExperience = (user.exp ?? 0) + newExperience;
 
+    // 경험치에 따른 랭크 결정
+    int updatedRank = calculateRank(updatedExperience);
+
+    // 새로운 랭크에 따른 maxGames 결정
+    int updatedMaxGames = calculateMaxGames(updatedRank);
+
     // 총 상금 계산
     int newTotalPrize = calculateTotalPrizeAmount(userGames, lottoResult);
-    double updatedTotalPrize = (user.totalPrize ?? 0) + newTotalPrize;
+    double updatedTotalPrize = (user.totalPrize) + newTotalPrize;
 
     // 총 게임 수 및 지출 계산
-    double updatedTotalGames = (user.totalSpend/1000 ?? 0) + totalGamesUpdated;
+    double updatedTotalGames = (user.totalSpend / 1000) + totalGamesUpdated;
     double updatedTotalSpends = updatedTotalGames * 1000;
-
 
     // 당첨번호를 유저의 coreNos에 모두 추가하는 과정
     List<int> updatedCoreNos = List<int>.from(user.coreNos ?? []);
@@ -74,38 +135,42 @@ class UserModelNotifier extends _$UserModelNotifier {
       updatedCoreNos.addAll(game.winningNos as Iterable<int>);
     }
 
+    int newWonGames = userGames.where((game) => game.matchingCount! >= 3).length;
+    int updatedWonGames = (user.wonGames) + newWonGames;
 
     // 업데이트된 유저 정보 객체
     final updatedUser = user.copyWith(
       winningRate: updatedWinningRate,
       exp: updatedExperience,
+      rank: updatedRank, // 새로 추가된 부분
+      maxGames: updatedMaxGames, // 새로 추가된 부분
       totalPrize: updatedTotalPrize,
       totalSpend: updatedTotalSpends,
       coreNos: updatedCoreNos,
+      wonGames: updatedWonGames,
     );
 
-    // Firestore 및 상태 업데이트
     await updateUser(updatedUser);
   }
 
 
 
 
-  // user Collection에서 데이터를 가져와 User 객체 생성 및 상태 업데이트
+
+
+
+
   // 파이어스토어에서 uid를 찔러 유저정보를 가져온다. 가져온 유저정보를 토대로 UserModel을 구성, State에 업뎃
   Future<UserModel?> fetchUser(String uid) async {
-    final doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    final doc =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
     if (doc.exists) {
-      final user =  UserModel.fromJson(doc.data()!);
-      // print('페치전 유저는 null이어야함 $state');
+      final user = UserModel.fromJson(doc.data()!);
       state = user;
-      // print('페치 후 업데이트된 스테이트는 uid KpM2iTirTAMSJaufq4Ddwv1FUK53 :  $state');
-
       return user;
     }
     return null;
   }
-
 
   // UserGame객체 받고, uid 받아서 유저컬렉션 내 games 에 게임객체 추가
   Future<void> addGameToUser(UserGame game, String userId) async {
@@ -114,17 +179,43 @@ class UserModelNotifier extends _$UserModelNotifier {
           .collection('users')
           .doc(userId)
           .collection('userGames')
-          .doc(game.gameId)  // 고유한 gameId로 문서 생성
-          .set(game.toJson());  // 새로운 게임 추가
+          .doc(game.gameId) // 고유한 gameId로 문서 생성
+          .set(game.toJson()); // 새로운 게임 추가
 
       print('게임이 성공적으로 추가되었습니다: ${game.toJson()}');
+      // 최근추가 아래줄
+
     } catch (e) {
       print('게임 추가 중 오류 발생: $e');
     }
+    await fetchUser(userId);
   }
 
 
+  // 자꾸 마지막 것만 저장되서 게임리스트 전체를 저장하게 하는 것
+  Future<void> addGamesToUser(List<UserGame> games, String userId) async {
+    try {
+      final batch = FirebaseFirestore.instance.batch();
+      for (var game in games) {
+        final docRef = FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .collection('userGames')
+            .doc(game.gameId);
+        batch.set(docRef, game.toJson());
+      }
+      await batch.commit();
+      print('All games added successfully');
+      await fetchUser(userId);
+    } catch (e) {
+      print('Error adding games: $e');
+    }
+  }
+  // 자꾸 마지막 것만 저장되서 게임리스트 전체를 저장하게 하는 것
+
+
   // uid 받아서 유저게임리스트 받아오기
+  // 이 함수 쓰이는데가 없네?
   Future<List<UserGame>> getUserGames(String userId) async {
     try {
       QuerySnapshot snapshot = await FirebaseFirestore.instance
@@ -133,7 +224,9 @@ class UserModelNotifier extends _$UserModelNotifier {
           .collection('userGames')
           .orderBy('roundNo', descending: true)
           .get();
-      return snapshot.docs.map((doc) => UserGame.fromJson(doc.data() as Map<String, dynamic>)).toList();
+      return snapshot.docs
+          .map((doc) => UserGame.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
     } catch (e) {
       print('게임 데이터를 가져오는 중 오류 발생: $e');
       return [];
@@ -151,10 +244,28 @@ class UserModelNotifier extends _$UserModelNotifier {
           .orderBy('roundNo', descending: true) // 내림차순 정렬 (필요에 따라 유지)
           .get();
 
-      return snapshot.docs.map((doc) => UserGame.fromJson(doc.data() as Map<String, dynamic>)).toList();
+      return snapshot.docs
+          .map((doc) => UserGame.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
     } catch (e) {
       print('게임 데이터를 가져오는 중 오류 발생: $e');
       return [];
     }
   }
+
+
+  Future<UserModel?> fetchUserWithoutStateUpdate(String uid) async {
+    try {
+      final doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      if (doc.exists) {
+        return UserModel.fromJson(doc.data()!);
+      }
+      return null;
+    } catch (e) {
+      print('Error fetching user $uid: $e');
+      return null;
+    }
+  }
+
+
 }

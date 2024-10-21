@@ -30,10 +30,11 @@ mixin _$UserModel {
   double get totalSpend => throw _privateConstructorUsedError;
   double get totalPrize => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
-  double? get winningRate => throw _privateConstructorUsedError;
-  int? get rank => throw _privateConstructorUsedError;
-  double? get exp => throw _privateConstructorUsedError;
   List<int>? get coreNos => throw _privateConstructorUsedError;
+  double get exp => throw _privateConstructorUsedError;
+  double get winningRate => throw _privateConstructorUsedError;
+  int get wonGames => throw _privateConstructorUsedError;
+  int get rank => throw _privateConstructorUsedError;
   int get maxGames => throw _privateConstructorUsedError;
   String get userComment => throw _privateConstructorUsedError;
 
@@ -57,10 +58,11 @@ abstract class $UserModelCopyWith<$Res> {
       double totalSpend,
       double totalPrize,
       String email,
-      double? winningRate,
-      int? rank,
-      double? exp,
       List<int>? coreNos,
+      double exp,
+      double winningRate,
+      int wonGames,
+      int rank,
       int maxGames,
       String userComment});
 }
@@ -86,10 +88,11 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? totalSpend = null,
     Object? totalPrize = null,
     Object? email = null,
-    Object? winningRate = freezed,
-    Object? rank = freezed,
-    Object? exp = freezed,
     Object? coreNos = freezed,
+    Object? exp = null,
+    Object? winningRate = null,
+    Object? wonGames = null,
+    Object? rank = null,
     Object? maxGames = null,
     Object? userComment = null,
   }) {
@@ -126,22 +129,26 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      winningRate: freezed == winningRate
-          ? _value.winningRate
-          : winningRate // ignore: cast_nullable_to_non_nullable
-              as double?,
-      rank: freezed == rank
-          ? _value.rank
-          : rank // ignore: cast_nullable_to_non_nullable
-              as int?,
-      exp: freezed == exp
-          ? _value.exp
-          : exp // ignore: cast_nullable_to_non_nullable
-              as double?,
       coreNos: freezed == coreNos
           ? _value.coreNos
           : coreNos // ignore: cast_nullable_to_non_nullable
               as List<int>?,
+      exp: null == exp
+          ? _value.exp
+          : exp // ignore: cast_nullable_to_non_nullable
+              as double,
+      winningRate: null == winningRate
+          ? _value.winningRate
+          : winningRate // ignore: cast_nullable_to_non_nullable
+              as double,
+      wonGames: null == wonGames
+          ? _value.wonGames
+          : wonGames // ignore: cast_nullable_to_non_nullable
+              as int,
+      rank: null == rank
+          ? _value.rank
+          : rank // ignore: cast_nullable_to_non_nullable
+              as int,
       maxGames: null == maxGames
           ? _value.maxGames
           : maxGames // ignore: cast_nullable_to_non_nullable
@@ -170,10 +177,11 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserModelCopyWith<$Res> {
       double totalSpend,
       double totalPrize,
       String email,
-      double? winningRate,
-      int? rank,
-      double? exp,
       List<int>? coreNos,
+      double exp,
+      double winningRate,
+      int wonGames,
+      int rank,
       int maxGames,
       String userComment});
 }
@@ -196,10 +204,11 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? totalSpend = null,
     Object? totalPrize = null,
     Object? email = null,
-    Object? winningRate = freezed,
-    Object? rank = freezed,
-    Object? exp = freezed,
     Object? coreNos = freezed,
+    Object? exp = null,
+    Object? winningRate = null,
+    Object? wonGames = null,
+    Object? rank = null,
     Object? maxGames = null,
     Object? userComment = null,
   }) {
@@ -236,22 +245,26 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      winningRate: freezed == winningRate
-          ? _value.winningRate
-          : winningRate // ignore: cast_nullable_to_non_nullable
-              as double?,
-      rank: freezed == rank
-          ? _value.rank
-          : rank // ignore: cast_nullable_to_non_nullable
-              as int?,
-      exp: freezed == exp
-          ? _value.exp
-          : exp // ignore: cast_nullable_to_non_nullable
-              as double?,
       coreNos: freezed == coreNos
           ? _value._coreNos
           : coreNos // ignore: cast_nullable_to_non_nullable
               as List<int>?,
+      exp: null == exp
+          ? _value.exp
+          : exp // ignore: cast_nullable_to_non_nullable
+              as double,
+      winningRate: null == winningRate
+          ? _value.winningRate
+          : winningRate // ignore: cast_nullable_to_non_nullable
+              as double,
+      wonGames: null == wonGames
+          ? _value.wonGames
+          : wonGames // ignore: cast_nullable_to_non_nullable
+              as int,
+      rank: null == rank
+          ? _value.rank
+          : rank // ignore: cast_nullable_to_non_nullable
+              as int,
       maxGames: null == maxGames
           ? _value.maxGames
           : maxGames // ignore: cast_nullable_to_non_nullable
@@ -276,10 +289,11 @@ class _$UserImpl implements _User {
       required this.totalSpend,
       required this.totalPrize,
       required this.email,
-      this.winningRate,
-      this.rank,
-      this.exp,
       final List<int>? coreNos,
+      this.exp = 0,
+      this.winningRate = 0,
+      this.wonGames = 0,
+      this.rank = 1,
       this.maxGames = 5,
       this.userComment = 'your comment'})
       : _coreNos = coreNos;
@@ -305,12 +319,6 @@ class _$UserImpl implements _User {
   final double totalPrize;
   @override
   final String email;
-  @override
-  final double? winningRate;
-  @override
-  final int? rank;
-  @override
-  final double? exp;
   final List<int>? _coreNos;
   @override
   List<int>? get coreNos {
@@ -323,6 +331,18 @@ class _$UserImpl implements _User {
 
   @override
   @JsonKey()
+  final double exp;
+  @override
+  @JsonKey()
+  final double winningRate;
+  @override
+  @JsonKey()
+  final int wonGames;
+  @override
+  @JsonKey()
+  final int rank;
+  @override
+  @JsonKey()
   final int maxGames;
   @override
   @JsonKey()
@@ -330,7 +350,7 @@ class _$UserImpl implements _User {
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid, displayName: $displayName, photoUrl: $photoUrl, createdTime: $createdTime, lastSignedIn: $lastSignedIn, totalSpend: $totalSpend, totalPrize: $totalPrize, email: $email, winningRate: $winningRate, rank: $rank, exp: $exp, coreNos: $coreNos, maxGames: $maxGames, userComment: $userComment)';
+    return 'UserModel(uid: $uid, displayName: $displayName, photoUrl: $photoUrl, createdTime: $createdTime, lastSignedIn: $lastSignedIn, totalSpend: $totalSpend, totalPrize: $totalPrize, email: $email, coreNos: $coreNos, exp: $exp, winningRate: $winningRate, wonGames: $wonGames, rank: $rank, maxGames: $maxGames, userComment: $userComment)';
   }
 
   @override
@@ -352,11 +372,13 @@ class _$UserImpl implements _User {
             (identical(other.totalPrize, totalPrize) ||
                 other.totalPrize == totalPrize) &&
             (identical(other.email, email) || other.email == email) &&
+            const DeepCollectionEquality().equals(other._coreNos, _coreNos) &&
+            (identical(other.exp, exp) || other.exp == exp) &&
             (identical(other.winningRate, winningRate) ||
                 other.winningRate == winningRate) &&
+            (identical(other.wonGames, wonGames) ||
+                other.wonGames == wonGames) &&
             (identical(other.rank, rank) || other.rank == rank) &&
-            (identical(other.exp, exp) || other.exp == exp) &&
-            const DeepCollectionEquality().equals(other._coreNos, _coreNos) &&
             (identical(other.maxGames, maxGames) ||
                 other.maxGames == maxGames) &&
             (identical(other.userComment, userComment) ||
@@ -375,10 +397,11 @@ class _$UserImpl implements _User {
       totalSpend,
       totalPrize,
       email,
-      winningRate,
-      rank,
-      exp,
       const DeepCollectionEquality().hash(_coreNos),
+      exp,
+      winningRate,
+      wonGames,
+      rank,
       maxGames,
       userComment);
 
@@ -406,10 +429,11 @@ abstract class _User implements UserModel {
       required final double totalSpend,
       required final double totalPrize,
       required final String email,
-      final double? winningRate,
-      final int? rank,
-      final double? exp,
       final List<int>? coreNos,
+      final double exp,
+      final double winningRate,
+      final int wonGames,
+      final int rank,
       final int maxGames,
       final String userComment}) = _$UserImpl;
 
@@ -434,13 +458,15 @@ abstract class _User implements UserModel {
   @override
   String get email;
   @override
-  double? get winningRate;
-  @override
-  int? get rank;
-  @override
-  double? get exp;
-  @override
   List<int>? get coreNos;
+  @override
+  double get exp;
+  @override
+  double get winningRate;
+  @override
+  int get wonGames;
+  @override
+  int get rank;
   @override
   int get maxGames;
   @override

@@ -4,16 +4,6 @@ import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
-/// Default [FirebaseOptions] for use with your Firebase apps.
-///
-/// Example:
-/// ```dart
-/// import 'firebase_options.dart';
-/// // ...
-/// await Firebase.initializeApp(
-///   options: DefaultFirebaseOptions.currentPlatform,
-/// );
-/// ```
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
@@ -63,6 +53,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '576261762950',
     projectId: 'kingoflotto-ee288',
     storageBucket: 'kingoflotto-ee288.appspot.com',
+    // ios 패키지네임이며, Xcode에서 변경가능
     iosBundleId: 'com.example.kingoflotto',
   );
 }

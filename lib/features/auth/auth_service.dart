@@ -45,6 +45,7 @@ class AuthService extends _$AuthService {
             createdTime: DateTime.now(),
             lastSignedIn: DateTime.now(),
             // 나중에 기존 total spend, prize, userGame, winningRate 등등 있으면 기존꺼 쓰고 없으면 업데이트
+            winningRate: 0,
             totalSpend: 0,
             totalPrize: 0,
             exp: 0,

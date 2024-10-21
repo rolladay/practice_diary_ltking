@@ -1,13 +1,14 @@
+
 plugins {
     id "com.android.application"
-    // START: FlutterFire Configuration
+    // FlutterFire Configuration
     id 'com.google.gms.google-services'
-    // END: FlutterFire Configuration
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+// new지웠는데 문제 생기면 다시 우측에 함수앞에 new 넣어랑
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
@@ -27,7 +28,8 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace = "com.example.kingoflotto"
+    //namespace = "com.example.kingoflotto"
+    namespace = "com.lotto.king"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -37,21 +39,28 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.lotto.king"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
     }
 
+    signingConfigs {
+        release {
+            keyAlias 'lottokingkey'  // Key alias 설정
+            keyPassword '565656'  // Key password 설정
+            storeFile file('C:/Users/Rafa/StudioProjects/kingoflotto/android/release-keystore.jks')  // 여기에 키스토어 파일 경로를 입력
+            storePassword '565656'  // Keystore password 설정
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.debug
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
@@ -59,3 +68,14 @@ android {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    // ML Kit 텍스트 인식 한국어 지원 라이브러리 추가
+    implementation 'com.google.mlkit:text-recognition-korean:16.0.1'
+
+    // Firebase BoM (Bill of Materials) 추가
+    implementation platform('com.google.firebase:firebase-bom:33.4.0')
+}
+
+// Google 서비스 플러그인 적용
+apply plugin: 'com.google.gms.google-services'

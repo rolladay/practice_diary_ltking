@@ -20,6 +20,7 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   // 홈페이지로 랜딩 후 처음 보여줄 화면 > LottoPage로 설정
   int _selectedIndex = 1;
+  DateTime? currentBackPressTime;
 
   static final List<Widget> _widgetOptions = [
     const RankPage(),
@@ -27,8 +28,6 @@ class _HomePageState extends ConsumerState<HomePage> {
     const DrawPage(),
     const ProfilePage(),
   ];
-
-  DateTime? currentBackPressTime;
 
   Future<void> _onWillPop() async {
     DateTime now = DateTime.now();
@@ -40,12 +39,12 @@ class _HomePageState extends ConsumerState<HomePage> {
           content: const Text(
               '뒤로가기 버튼을 한번 더 누르면 앱이 종료됩니다'),
           duration: const Duration(seconds: 2),
-          action: SnackBarAction(
-            label: '확인',
-            onPressed: () {
-              // 액션 버튼을 눌렀을 때의 동작
-            },
-          ),
+          // action: SnackBarAction(
+          //   label: '확인',
+          //   onPressed: () {
+          //     // 액션 버튼을 눌렀을 때의 동작
+          //   },
+          // ),
           backgroundColor: Colors.black87,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
@@ -98,7 +97,6 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {

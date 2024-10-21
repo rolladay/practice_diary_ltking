@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../constants/color_constants.dart';
 
 class MyContainer extends StatelessWidget {
@@ -7,11 +6,12 @@ class MyContainer extends StatelessWidget {
       {super.key,
       required this.upperChild,
       required this.bottomChild,
-      required this.bottomHeight});
+      required this.bottomHeight, required this.upperChildColor});
 
   final Widget upperChild;
   final Widget bottomChild;
   final double bottomHeight;
+  final Color upperChildColor;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class MyContainer extends StatelessWidget {
           width: double.infinity,
           height: 36,
           decoration: BoxDecoration(
-            color: secondOrange,
+            color: upperChildColor,
             border: Border.all(color: primaryBlack),
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(8),

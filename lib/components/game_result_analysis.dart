@@ -3,7 +3,6 @@ import 'package:kingoflotto/components/my_sizedbox.dart';
 
 import '../constants/color_constants.dart';
 import '../features/lotto_service/lotto_functions.dart';
-import '../features/lotto_service/usergame_manager.dart';
 import '../models/lotto_result_model/lotto_result.dart';
 import '../models/user_game_model/user_game.dart';
 
@@ -87,6 +86,7 @@ class GameResultAnalysis extends StatelessWidget {
             foregroundColor: WidgetStateProperty.all<Color>(specialBlue),
           ),
           onPressed: () {
+            // 상세결과확인 보여주는 부분
             showModalBottomSheet(
               context: context,
               backgroundColor: backGroundColor, // 배경색 설정
@@ -104,96 +104,96 @@ class GameResultAnalysis extends StatelessWidget {
                     return a.resultRank!.compareTo(b.resultRank!.toInt());
                   });
 
-                return Container(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-                  // 모달 내부 여백 설정
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Center(
-                        child: Container(
-                          height: 3,
-                          width: 60,
-                          color: primaryBlack,
+                return ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.5, // 화면 높이의 70%로 제한
+                  ),
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+                    // 모달 내부 여백 설정
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Center(
+                          child: Container(
+                            height: 3,
+                            width: 60,
+                            color: primaryBlack,
+                          ),
                         ),
-                      ),
-                      const MySizedBox(height: 8),
-                      const Text(
-                        '상세결과',
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w600),
-                      ),
-                      const MySizedBox(height: 16),
-                      SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min, // 내용물에 맞게 크기 조정
-                          children: sortedGames.map((userGame) {
-                            // 3. resultRank가 0이면 '액땜'으로 표시
-                            String rankText = userGame.resultRank == 0
-                                ? '액땜'
-                                : '${userGame.resultRank}등';
+                        const MySizedBox(height: 8),
+                        const Text(
+                          '상세결과',
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                        ),
+                        const MySizedBox(height: 16),
+                        Flexible(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min, // 내용물에 맞게 크기 조정
+                              children: sortedGames.map((userGame) {
+                                // 3. resultRank가 0이면 '액땜'으로 표시
+                                String rankText = userGame.resultRank == 0
+                                    ? '액땜'
+                                    : '${userGame.resultRank}등';
 
-                            return ListTile(
-                              subtitle: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    '$rankText :',
-                                    style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  Row(
-                                    children:
-                                        userGame.selectedDrwNos.map((number) {
-                                      // 5. winningNos에 있는 숫자에 대해 색상 및 텍스트 스타일 변경
-                                      bool isWinningNumber = userGame.winningNos
+                                return ListTile(
+                                  subtitle: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '$rankText :',
+                                        style: const TextStyle(
+                                            fontSize: 16, fontWeight: FontWeight.w600),
+                                      ),
+                                      Row(
+                                        children: userGame.selectedDrwNos.map((number) {
+                                          // 5. winningNos에 있는 숫자에 대해 색상 및 텍스트 스타일 변경
+                                          bool isWinningNumber = userGame.winningNos
                                               ?.contains(number) ??
-                                          false;
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 4.0),
-                                        child: Container(
-                                          width: 38.0,
-                                          // 동그라미의 가로 크기
-                                          height: 38.0,
-                                          // 동그라미의 세로 크기
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                              color: primaryBlack, // 테두리 색상
-                                              width: 1.0, // 테두리 두께
+                                              false;
+                                          return Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 4.0),
+                                            child: Container(
+                                              width: 38.0, // 동그라미의 가로 크기
+                                              height: 38.0, // 동그라미의 세로 크기
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                  color: primaryBlack, // 테두리 색상
+                                                  width: 1.0, // 테두리 두께
+                                                ),
+                                                color: isWinningNumber
+                                                    ? primaryYellow
+                                                    : Colors.grey,
+                                              ),
+                                              alignment: Alignment.center, // 텍스트 가운데 정렬
+                                              child: Text(
+                                                number.toString(),
+                                                style: TextStyle(
+                                                  color: isWinningNumber
+                                                      ? Colors.black
+                                                      : Colors.white, // 글씨 색상
+                                                  fontWeight: isWinningNumber
+                                                      ? FontWeight.bold
+                                                      : FontWeight.normal, // 글씨 굵기
+                                                  fontSize: 14,
+                                                ),
+                                              ),
                                             ),
-                                            color: isWinningNumber
-                                                ? primaryYellow
-                                                : Colors.grey,
-                                          ),
-                                          alignment: Alignment.center,
-                                          // 텍스트 가운데 정렬
-                                          child: Text(
-                                            number.toString(),
-                                            style: TextStyle(
-                                              color: isWinningNumber
-                                                  ? Colors.black
-                                                  : Colors.white, // 글씨 색상
-                                              fontWeight: isWinningNumber
-                                                  ? FontWeight.bold
-                                                  : FontWeight.normal, // 글씨 굵기
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    }).toList(),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            );
-                          }).toList(),
+                                );
+                              }).toList(),
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               },

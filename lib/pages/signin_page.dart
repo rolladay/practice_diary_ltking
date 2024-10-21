@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,7 +21,6 @@ class _SignInPageState extends ConsumerState<SignInPage> {
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       SystemChrome.setSystemUIOverlayStyle(
         const SystemUiOverlayStyle(
@@ -30,7 +28,6 @@ class _SignInPageState extends ConsumerState<SignInPage> {
           systemNavigationBarIconBrightness: Brightness.light,
         ),
       );
-
       await _initializeUser();
     });
   }
@@ -51,7 +48,6 @@ class _SignInPageState extends ConsumerState<SignInPage> {
         // 'irukke' : 'hamyundoie' - 이 키가 없으면 생성 있으면 업뎃. 오케이?
       };
       await firestore.collection('users').doc(authUser.uid).update(userData);
-
       // Navigate to home after a delay
       Timer(const Duration(seconds: 1), navigateToHome);
     }
@@ -86,6 +82,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
       MaterialPageRoute(builder: (context) => const HomePage()),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {

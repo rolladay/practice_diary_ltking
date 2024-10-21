@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kingoflotto/components/my_sizedbox.dart';
 import 'package:kingoflotto/models/user_model/user_model.dart';
+import 'package:kingoflotto/pages/policy_page.dart';
 import 'package:kingoflotto/pages/signin_page.dart';
+import 'package:kingoflotto/pages/user_guide.dart';
+import '../components/my_btn_container.dart';
 import '../components/my_divider.dart';
 import '../components/my_setting_list.dart';
 import '../constants/color_constants.dart';
@@ -104,25 +107,32 @@ class _SettingPageState extends ConsumerState<SettingPage> {
             const MySizedBox(height: 4),
             const MyDivider(),
             const MySizedBox(height: 4),
-            const MySettingList(
-              listKey: '로또왕 사용가이드',
-              listValue: '보기',
+            GestureDetector(
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const UserGuide())),
+              child: const MySettingList(
+                listKey: '로또왕 사용설명서',
+                listValue: '보기',
+              ),
             ),
-            const MySettingList(
-              listKey: '이용약관',
-              listValue: '보기',
+            GestureDetector(
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const TermsOfService())),
+              child: const MySettingList(
+                listKey: '이용약관',
+                listValue: '보기',
+              ),
             ),
-            const MySettingList(
-              listKey: '고객의 소리',
-              listValue: 'rolladay.cs@gmail.com',
-            ),
-            Spacer(),
-            const Text(''),
-            ElevatedButton(
-              child: const Text('로그아웃'),
-              onPressed: () {
-                _handleSignOut(context);
-              },
+
+            const Spacer(),
+            GestureDetector(
+              onTap: () => _handleSignOut(context),
+              child: const MyBtnContainer(
+                color: Colors.black87,
+                child: Center(
+                  child: Text('로그아웃', style: btnTextStyle),
+                ),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -136,4 +146,3 @@ class _SettingPageState extends ConsumerState<SettingPage> {
     );
   }
 }
-

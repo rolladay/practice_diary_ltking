@@ -3,10 +3,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import '../../models/lotto_result_model/lotto_result.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
-
 import '../isar_db/isar_service.dart';
-
-
 
 
 // 현재시간을 집어넣어 다음 당첨결과발표일을 변수에 저장한다.마지막 업데이트 시간을 확인해서
@@ -14,7 +11,6 @@ import '../isar_db/isar_service.dart';
 // 웹크롤링을해서 새로운 LottoResult객체에 저장한다. Isar의 마지막 로또객체와 비교해서 뉴리절트가 더 최근이면
 // Isar에도 뉴리절트 저장하고, 캐시에도 저장한다.(덮어씀)
 // 그게 아니고 아직 웹크롤링 할떄 안된경우에는 밑에가 실행되는데
-
 // 가끔 지웠다 깔면 로또 정보 못불러올 때가 있는데... 그건 crawl링 값이 삑사리 나면 그러한 것임
 
 Future<LottoResult> getCachedOrFetchLottoResult() async {
@@ -23,6 +19,7 @@ Future<LottoResult> getCachedOrFetchLottoResult() async {
 
   try {
     final now = DateTime.now();
+    // 저번주토요일, 또는 이번주 토요일을 반환한다.
     final nextDrawTime = getNextDrawTime(now);
 
     // 마지막 업데이트 시간 확인해서 마지막업데이트시간이 있다면
@@ -35,13 +32,8 @@ Future<LottoResult> getCachedOrFetchLottoResult() async {
     // 최근회차일자를 지났고, 마지막 웹http실행날짜가 이 회차일자보다 전이면 실행, 즉 웹크롤링실행하는 경우
     // 페키(클로링)한 로또리절트를 이사르에 저장하고, 캐시매니저에도 저장.(로또리절트, 라스트업데이트타임)
     if (now.isAfter(nextDrawTime) && lastUpdateTime.isBefore(nextDrawTime)) {
-      // 새로운 결과를 가져와야 하는 경우 newLottoResult는 Future<LottoResult>를 담고있다.
       final newLottoResult = await fetchLottoResult();
-      print('겟오어캐시로또데이터 함수 - 페치로또리절트 결과값이 newLottoResult : $newLottoResult');
-      // 기존 데이터와 비교
       final lastResult = await isarService.getLatestLottoResult();
-      print('겟오어캐시로또데이터 함수 - isar에서 최근로또리절트갖고와 메소드 결과 lastResult : $lastResult');
-
 
       // 이게 안되가지고 새로운 로또리절트 저장안되고 DrawPage도 에러인듯 - 캐시때문에 (지웠다 까는건 됨)
       if (lastResult == null || newLottoResult.roundNumber > lastResult.roundNumber) {
@@ -60,12 +52,11 @@ Future<LottoResult> getCachedOrFetchLottoResult() async {
       //페치할 필요없는 상황일 결루에는 Isar 에 있는 가장 최근 LottoResult 그대로 보여줌
       return lastResult;
     }
-    // if문이 안도는 경우에는 캐시된 데이터 반환
+    // if문이 안도는 경우에는 캐시된 데이터 반환 - 처음 접속유저,
     final cachedResult = await getCachedLottoResult();
     if (cachedResult != null) {
       return cachedResult;
     }
-
     // 캐시된 데이터가 없는 경우 IsarDB에서 가져오기, isar에는 언제 저장되냐면 위에서 저장됨
     return await isarService.getLatestLottoResult() ?? LottoResult.empty();
   } catch (e) {
@@ -76,31 +67,18 @@ Future<LottoResult> getCachedOrFetchLottoResult() async {
 }
 
 
-// LottoResult의 Future를 반환하는것 까지만 얘의 임무
-
-
-
 //가장 최근의 추첨일자를 가져온다.- 확인완료
 DateTime getNextDrawTime(DateTime now) {
   // 이번 주 토요일 20:30
   var drawTime = DateTime(now.year, now.month, now.day)
       .subtract(Duration(days: now.weekday))
       .add(const Duration(days: 6, hours: 20, minutes: 45));
-
   // 현재 시간이 이번 주 토요일 20:30 이전이라면 drawTime을 7일전으로 설정(즉 아직 페치할떄 안됬다는 뜻)
   if (now.isBefore(drawTime)) {
     drawTime = drawTime.subtract(const Duration(days: 7));
   }
-
   return drawTime;
 }
-
-
-
-
-
-
-
 
 
 // 캐시에 저장된 로또리절트 가져오는 함수 이건 무조건 있을 수 밖에 없음. isar에서 가져와도 되긴 하지만...캐시가 나음
@@ -111,7 +89,6 @@ Future<LottoResult?> getCachedLottoResult() async {
     if (fileInfo != null) {
       final jsonString = await fileInfo.file.readAsString();
       final jsonMap = jsonDecode(jsonString);
-      print('겟캐시드로또리절트 반환갑 : $jsonMap');
       return LottoResult.fromJson(jsonMap);
     }
   } catch (e) {

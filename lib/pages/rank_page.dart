@@ -4,27 +4,31 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kingoflotto/components/my_sizedbox.dart';
+import '../components/flip_profile_card.dart';
 import '../constants/color_constants.dart';
 import '../constants/fonts_constants.dart';
 import '../features/lotto_service/lotto_functions.dart';
 import '../features/lotto_service/lotto_result_manager.dart';
+import '../features/user_service/user_provider.dart';
 import '../models/lotto_result_model/lotto_result.dart';
 
-class RankPage extends StatefulWidget {
+
+class RankPage extends ConsumerStatefulWidget {
   const RankPage({super.key});
 
   @override
-  State<RankPage> createState() => _RankPageState();
+  ConsumerState<RankPage> createState() => _RankPageState();
 }
 
-class _RankPageState extends State<RankPage> {
+class _RankPageState extends ConsumerState<RankPage> {
   bool _isLoading = true;
   String? _errorMessage;
   String _selectedOrderBy = 'exp';
-  LottoResult? _nextLottoResult;
-  List<Map<String, dynamic>>? _cachedUsers;//아마도 rankings.doc 에서 가져온 유저리스트겠지?
+  LottoResult? _recentLottoResult;
+  List<Map<String, dynamic>>? _cachedUsers; //아마도 rankings.doc 에서 가져온 유저리스트겠지?
 
   @override
   void initState() {
@@ -33,16 +37,17 @@ class _RankPageState extends State<RankPage> {
   }
 
   Future<void> _initializeData() async {
-    await _loadNextLottoResult();
+    await _loadRecentLottoResult();
     await _loadRankings();
   }
 
-  Future<void> _loadNextLottoResult() async {
+  // CachedLottoResult가 null일 수는 없음
+  Future<void> _loadRecentLottoResult() async {
     try {
       LottoResult? result = await getCachedLottoResult();
       if (result != null) {
         setState(() {
-          _nextLottoResult = result;
+          _recentLottoResult = result;
         });
       } else {
         setState(() {
@@ -75,8 +80,9 @@ class _RankPageState extends State<RankPage> {
     final now = DateTime.now();
     final daysUntilSaturday = DateTime.saturday - now.weekday;
     final nextSaturday =
-    now.add(Duration(days: daysUntilSaturday > 0 ? daysUntilSaturday : 7));
-    return DateTime(nextSaturday.year, nextSaturday.month, nextSaturday.day, 20, 46);
+        now.add(Duration(days: daysUntilSaturday > 0 ? daysUntilSaturday : 7));
+    return DateTime(
+        nextSaturday.year, nextSaturday.month, nextSaturday.day, 20, 46);
   }
 
   Future<void> _fetchAndCacheRankings() async {
@@ -86,7 +92,8 @@ class _RankPageState extends State<RankPage> {
           .doc(_selectedOrderBy)
           .get();
       if (snapshot.exists) {
-        final users = List<Map<String, dynamic>>.from(snapshot.data()!['users']);
+        final users =
+            List<Map<String, dynamic>>.from(snapshot.data()!['users']);
         final jsonStr = jsonEncode(users);
         final nextExpiration = _getNextSaturdayAt8_45PM();
         final cacheKey = 'rankings_cache_$_selectedOrderBy';
@@ -227,7 +234,16 @@ class _RankPageState extends State<RankPage> {
     }
   }
 
-
+  String _getSelectedOrderText(String selectedOrder) {
+    switch (selectedOrder) {
+      case 'totalPrize':
+        return '총 상금';
+      case 'winningRate':
+        return '적중률';
+      default:
+        return '경험치'; // 기본값
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -278,13 +294,14 @@ class _RankPageState extends State<RankPage> {
                   Row(
                     children: [
                       Text(
-                        '$_selectedOrderBy 순위',
+                        _getSelectedOrderText(_selectedOrderBy), // 메소드 사용
                         style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
                       const Spacer(),
                       Text(
-                        'Updated : ${_nextLottoResult != null ? DateFormat('yyyy-MM-dd').format(_nextLottoResult!.drawDate) : '알 수 없음'}',
-                        style: const TextStyle(fontSize: 12, color: Colors.grey),
+                        'Updated : ${_recentLottoResult != null ? DateFormat('yyyy-MM-dd').format(_recentLottoResult!.drawDate) : '알 수 없음'}',
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                     ],
                   ),
@@ -304,53 +321,112 @@ class _RankPageState extends State<RankPage> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _errorMessage != null
-                ? Center(child: Text(_errorMessage!))
-                : ListView.builder(
-              itemCount: _cachedUsers?.length ?? 0,
-              itemBuilder: (context, index) {
-                var user = _cachedUsers![index];
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(width: 1, color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 24,
-                          child: Text(
-                            '${index + 1}',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
+                    ? Center(child: Text(_errorMessage!))
+                    : ListView.builder(
+                        itemCount: _cachedUsers?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          var user = _cachedUsers![index];
+                          return GestureDetector(
+                            // 탭할때마다 파베 read 요청이 있음. 나중에 cached등 최적화 필요 (유효기간 설정 등)
+
+                              onTap: () async {
+                                final BuildContext currentContext = context;
+
+                                SystemChrome.setSystemUIOverlayStyle(
+                                  const SystemUiOverlayStyle(
+                                    systemNavigationBarColor: Color.fromARGB(255, 111, 46, 18),
+                                    systemNavigationBarIconBrightness: Brightness.light,
+                                  ),
+                                );
+
+                                try {
+                                  final userModelNotifier = ref.read(userModelNotifierProvider.notifier);
+                                  final userModel = await userModelNotifier.fetchUserWithoutStateUpdate(user['id']);
+
+                                  if (userModel != null && currentContext.mounted) {
+                                    showDialog(
+                                      context: currentContext,
+                                      useSafeArea: false,
+                                      builder: (BuildContext context) {
+                                        return SizedBox(
+                                          width: MediaQuery.of(context).size.width * 0.9,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                buildFlipProfileFront(userModel, buildTopNumbers),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ).whenComplete(() {
+                                      SystemChrome.setSystemUIOverlayStyle(
+                                        const SystemUiOverlayStyle(
+                                          systemNavigationBarColor: Color.fromARGB(255, 216, 89, 37),
+                                          systemNavigationBarIconBrightness: Brightness.light,
+                                        ),
+                                      );
+                                    });
+                                  }
+                                } catch (e) {
+                                  print('Error showing user profile: $e');
+                                }
+                              },
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(16, 4,16,4),
+                              child: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border:
+                                      Border.all(width: 1, color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 24,
+                                      child: Text(
+                                        '${index + 1}',
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    CachedNetworkImage(
+                                      imageUrl: user['photoUrl'],
+                                      imageBuilder: (context, imageProvider) =>
+                                          CircleAvatar(
+                                        radius: 16,
+                                        backgroundImage: imageProvider,
+                                        backgroundColor: Colors.transparent,
+                                      ),
+                                      placeholder: (context, url) => const Icon(
+                                        Icons.downloading,
+                                        size: 32,
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(
+                                        Icons.error,
+                                        size: 32,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Text(user['displayName']),
+                                    const Spacer(),
+                                    Text(_getSelectedOrderValue(user)),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        CachedNetworkImage(
-                          imageUrl: user['photoUrl'],
-                          imageBuilder: (context, imageProvider) => CircleAvatar(
-                            radius: 16,
-                            backgroundImage: imageProvider,
-                            backgroundColor: Colors.transparent,
-                          ),
-                          placeholder: (context, url) => const Icon(Icons.downloading),
-                          errorWidget: (context, url, error) => const Icon(Icons.error),
-                        ),
-                        const SizedBox(width: 16),
-                        Text(user['displayName']),
-                        const Spacer(),
-                        Text(_getSelectedOrderValue(user)),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
+                          );
+                        },
+                      ),
           ),
         ],
       ),
