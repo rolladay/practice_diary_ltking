@@ -40,20 +40,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBG-cNs02_qwA07sZgEKfAwlFAgSEIo6A0',
-    appId: '1:576261762950:android:82cb1b0ba916f9de7e4607',
-    messagingSenderId: '576261762950',
-    projectId: 'kingoflotto-ee288',
-    storageBucket: 'kingoflotto-ee288.appspot.com',
+    apiKey: 'nonono',
+    appId: 'nonono',
+    messagingSenderId: 'nonono',
+    projectId: 'nonono',
+    storageBucket: 'nononono',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCd8f4qGMCj-v0uQbZbIgd3nF1ctBB9UBs',
-    appId: '1:576261762950:ios:e6c4aedf61c29de97e4607',
-    messagingSenderId: '576261762950',
-    projectId: 'kingoflotto-ee288',
-    storageBucket: 'kingoflotto-ee288.appspot.com',
+    apiKey: 'nononono',
+    appId: 'nononono',
+    messagingSenderId: 'nononono',
+    projectId: 'nononono',
+    storageBucket: 'nononono',
     // ios 패키지네임이며, Xcode에서 변경가능
-    iosBundleId: 'com.example.kingoflotto',
+    iosBundleId: 'nononono',
   );
 }
